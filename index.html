@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html ng-app="evaluator">
+  <head>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>
+  </head>
+  <script type="text/javascript" src="angular.min.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+  <body ng-controller="uploadController">
+    <h1> Input File </h1>  
+    <input type="file" on-read-file="showContent($fileContent)"> </input>
+    <div ng-if="content">
+    <p> {{content}} </p>
+    </div>
+  </body> 
+  <body ng-controller="schemaController"> 
+    <h2> Schema File <h2> 
+    <input type="file" on-read-schema="showContent($fileContent)"> </input> 
+    <div>
+    <p> {{content_schema}} </p> 
+    </div> 
+  </body>
+
+</html>
