@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="evaluator">
+<link rel="stylesheet" type="text/css" href="css/test.css">
+<head>
+<!-- <meta charset="UTF-8">  -->
+<script type="text/javascript" src="angular.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+<title>Schema Validator Table Layout</title>
+</head>
+
+<body ng-controller="uploadController">
+
+<table style="float:center" border="1">
+	<tr style="height:50%" valign="top">
+		<td style="width:50%">
+			<h3> Input File </h3>
+			<input type="file" on-read-file="showContent($fileContent)"> </input>
+    		<div style="overflow-x:scroll; overflow-y:scroll" ng-if="content">
+    			<p> {{content}} </p>
+    		</div>
+    		<div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 141px; left: 124.835083007813px;"><textarea autocorrect="off" autocapitalize="off" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none;" tabindex="0"></textarea></div>
+		</td>
+		<td style="width:50%">
+			<h3> Schema File </h3>
+			<input type="file" on-read-schema="display($fileContents)"></input> 
+    		<div style="overflow-x:scroll; overflow-y:scroll" ng-if="schemaContent">
+    			<p> {{schemaContent}} </p> 
+    		</div> 
+		</td>
+	</tr>	
+	<tr valign="bottom">
+		<td colspan="2">
+			<select>
+				  <option value="txtToXML">Text to XML</option>
+				  <option value="XMLToTxt">XML to text</option>
+			</select>
+			<button >Run Schema</button>
+		</td>
+	</tr>
+	<tr style="height:25% " valign="top">
+		<td colspan="2">
+			<textarea readonly>
+				Output goes here 
+			</textarea>
+		</td>
+	</tr>
+	<tr align="right">
+		<td colspan="2">
+			<button >Save output</button>
+		</td>
+	</tr>
+</table>
+
+
+</body>
+</html>
