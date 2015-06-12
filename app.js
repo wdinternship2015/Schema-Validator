@@ -16,13 +16,10 @@ app.controller('uploadController', function($scope){
   $scope.showContent = function($fileContent){
     $scope.content= $fileContent; 
   };
-}); 
-
-/*app.controller('schemaController', function($scope){
-  $scope.showContent22 = function($fileContent){
-    $scope.content_schema= $fileContent; 
+  $scope.display= function($fileContents){
+    $scope.schemaContent = $fileContents; 
   };
-});*/
+}); 
 
 app.directive('onReadFile', function ($parse) {
   return {
@@ -37,14 +34,15 @@ app.directive('onReadFile', function ($parse) {
 	   fn(scope, {$fileContent:onLoadEvent.target.result});
            });
          };
-         reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+        reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+       console.log((onChangeEvent.target).files[0].type); 
        });
      }
   };
 });
 
 
-/*app.directive('onReadSchema', function ($parse) {
+app.directive('onReadSchema', function ($parse) {
   return {
     restrict: 'A',
     scope: false,
@@ -54,11 +52,12 @@ app.directive('onReadFile', function ($parse) {
          var reader = new FileReader();
          reader.onload = function(onLoadEvent) {
            scope.$apply(function() {
-           fn(scope, {$fileContent:onLoadEvent.target.result});
+           fn(scope, {$fileContents:onLoadEvent.target.result});
            });
          };
          reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+         console.log((onChangeEvent.target).files[0].type); 
        });
      }
   };
-});*/
+}); 
