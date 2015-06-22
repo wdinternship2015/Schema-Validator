@@ -135,3 +135,22 @@ app.directive('downloadFile', function($compile, $window){
   }
 
 });
+
+
+function pingServer() {
+	alert("ping server");
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', 'http://localhost:8080/ValidateService/webapi/testResponse');
+	xhr.onload = function() {
+		alert('success ' + xhr.responseText);
+	    var text = JSON.parse(xhr.responseText);
+	    alert('Response from CORS request to ' + url + ': ' + xhr.responseText);
+	  };
+
+	  xhr.onerror = function() {
+	    alert('Woops, there was an error making the request.');
+	  };
+	
+	xhr.send();
+}
+
