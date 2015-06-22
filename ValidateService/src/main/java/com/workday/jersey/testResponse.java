@@ -25,8 +25,8 @@ public class testResponse {
 		
 		//For more read about CORS HttpRequest
 		response.header("Access-Control-Allow-Origin", "*");
-		response.header("Access-Control-Allow-Methods", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
-		response.header("Access-Control-Allow-Headers", "GET, PUT, OPTIONS, X-XSRF-TOKEN");
+		response.header("Access-Control-Allow-Methods", "GET, PUT, OPTIONS, X-XSRF-TOKEN");
+		response.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
 		
 		//End of Header
 		
