@@ -33,6 +33,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+            	<groupId>workday</groupId>
+            	<artifactId>xsdregex</artifactId>
+            	<version>1.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -54,6 +60,53 @@
 		   <artifactId>cors-filter</artifactId>
 		   <version>2.4</version>
 		</dependency>  -->
+  <dependency>
+  	<groupId>Jersey-jars</groupId>
+  	<artifactId>mimepull</artifactId>
+  	<version>1.9.3</version>
+  	<scope>system</scope>
+  	<systemPath>/Users/elisa.yan/Documents/jersey/Jars/mimepull-1.9.3.jar</systemPath>
+  </dependency>
+  <dependency>
+  	<groupId>workday.textSchema</groupId>
+  	<artifactId>textSchema-cc-common</artifactId>
+  	<version>1.0</version>
+  </dependency>
+  <dependency>
+  	<groupId>workday.textSchema</groupId>
+  	<artifactId>TextSchema</artifactId>
+  	<version>1.0</version>
+  </dependency>
+  <dependency>
+  	<groupId>org.glassfish.jersey.media</groupId>
+  	<artifactId>jersey-media-multipart</artifactId>
+  </dependency>
+  <dependency>
+  	<groupId>workday.textSchema</groupId>
+  	<artifactId>wstx-asl</artifactId>
+  	<version>1.0</version>
+  </dependency>
+  <dependency>
+  	<groupId>workday.textSchema</groupId>
+  	<artifactId>asix-jaxrpc</artifactId>
+  	<version>1.0</version>
+  </dependency>
+  <dependency>
+  	<groupId>workday.textSchema</groupId>
+  	<artifactId>xsdregex</artifactId>
+  	<version>1.0</version>
+  </dependency>
+  <dependency>
+  	<groupId>commons-fileupload</groupId>
+  	<artifactId>commons-fileupload</artifactId>
+  	<version>1.2.2</version>
+  </dependency>
+  <dependency>
+  	<groupId>javax.servlet</groupId>
+  	<artifactId>javax.servlet-api</artifactId>
+  	<version>3.0.1</version>
+  	<scope>provided</scope>
+  </dependency>
     </dependencies>  
     <properties>
         <jersey.version>2.18</jersey.version>
