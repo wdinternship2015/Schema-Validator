@@ -68,7 +68,6 @@ public class textSchemaService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/byFileName")
 	public Response processByFileName(FormDataMultiPart formParams) {
-		
 	    String output = null;
 		ResponseBuilder response;
 		
@@ -77,9 +76,12 @@ public class textSchemaService {
 		InputStream inputIs = formParams.getField("inputFile").getValueAs(InputStream.class);
 		InputStream schemaIs =formParams.getField("schemaFile").getValueAs(InputStream.class);
 		String direction = formParams.getField("direction").getValue();
+		//String direction = json.getJSONObject("LabelData").getString("slogan");
 		
 		try{
-			if (direction.equalsIgnoreCase(TEXT_TO_XML)) {
+			if (inputIs == null || schemaIs == null || direction == null) {
+				response=Response.status(CLIENT_FAIL).entity("Can't process input parameters");
+			} else if (direction.equalsIgnoreCase(TEXT_TO_XML)) {
 				output = TransformationProcess.txtToXML(inputIs, schemaIs);
 				response=Response.status(SUCCESS).entity(output);
 			} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
@@ -95,7 +97,7 @@ public class textSchemaService {
 		
 		//CORS HttpResponse header
 		response.header("Access-Control-Allow-Origin", "*");
-		response.header("Access-Control-Allow-Methods", "GET, PUT, OPTIONS, X-XSRF-TOKEN");
+		response.header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, X-XSRF-TOKEN");
 		response.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
 		
 		//End of Header

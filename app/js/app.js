@@ -109,10 +109,11 @@ app.directive('sendFile',function($http){
       element.on('click', function(onClickEvent){
         console.log(scope.inputFile);
         console.log(scope.schemaFile);
+        
         var formData = new FormData();
         formData.append("schemaFile", scope.schemaFile);
         formData.append("inputFile", scope.inputFile); 
-        $http.post("http://localhost:8080/ValidateService/webapi/json/getForm", formData, {
+        $http.post("http://localhost:8080/ValidateService/webapi/runSchema/byFileName", formData, {
           transformRequest: angular.identity, 
           withCredentials: true, 
           headers: {'Content-type':undefined} 
@@ -190,13 +191,36 @@ app.directive('downloadFile', function($compile, $window){
 });*/
 
 
+function scriptSubmit(){
+	var form = document.forms.namedItem("validationForm");
+	var outForm = new FormData(form);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:8080/ValidateService/webapi/runSchema/byFileName', true);
+    xhr.onload = function() {
+    	if (xhr.status == 200) {
+    		document.getElementById("comment").value = xhr.responseText;
+    	} else {
+    		alert('Validation failed');
+    		document.getElementById("comment").value = xhr.responseText;
+    	}
+    };
+    xhr.onerror = function() {
+        alert('Woops, there was an error making the request.');
+    };
+    xhr.send(outForm);
+}
 
-function pingServer(){
-        alert("ping server");
+function pingServerGET(){
+       // alert("ping server");
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/ValidateService/webapi/testResponse');
+        xhr.open('GET', 'http://localhost:8080/ValidateService/webapi/testResponse/GET');
         xhr.onload = function() {
-                alert('success ' + xhr.responseText);
+        	if (xhr.status == 200) {
+        		var msg = xhr.responseText;
+        		alert('success ' + msg);
+        		document.getElementById("comment").value = msg;
+        	}    
+        	
             //var text = JSON.parse(xhr.responseText);
             //alert('Response from CORS request to ' + url + ': ' + xhr.responseText);
           };
@@ -206,7 +230,31 @@ function pingServer(){
         xhr.send();
 }
 
+function pingServerPOST(){
+   // alert("ping server");
+	var xhr = new XMLHttpRequest();
+	var param = "name=blah";
+    xhr.open('POST', 'http://localhost:8080/ValidateService/webapi/testResponse/POST', true);
+    xhr.onload = function() {
+            alert('success ' + xhr.responseText);
+      };
+      xhr.onerror = function() {
+        alert('Woops, there was an error making the request.' + xhr.responseText);
+        //$scope.textArea = xhr.responseText;
+      };
+    xhr.send(param);
+}
 
 
+app.controller('MainCtrl', function($scope) {
+	$scope.items = [
+	     { value: 'Text to XML', name: 'Text to XML' },
+	     { value: 'XML to text', name: 'XML to text' },
+	     { value: 'CSV to XML', name: 'CSV to XML' }
+	   ];
+	   //var selection = directionSelection.value;
+	  //$scope.selection = $scope.directionSelection.value;
+	//alert($directionSelection.value);
+	});
 
 
