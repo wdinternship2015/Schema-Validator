@@ -199,9 +199,11 @@ function scriptSubmit(){
     xhr.onload = function() {
     	if (xhr.status == 200) {
     		document.getElementById("comment").value = xhr.responseText;
+    		document.getElementById("comment").style.color = "black";
     	} else {
-    		alert('Validation failed');
+    		//alert('Validation failed');
     		document.getElementById("comment").value = xhr.responseText;
+    		document.getElementById("comment").style.color = "red";
     	}
     };
     xhr.onerror = function() {

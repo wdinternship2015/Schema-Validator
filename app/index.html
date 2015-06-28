@@ -8,40 +8,40 @@
   <script type="text/javascript" src="js/angular-resource.js"></script> 
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
-  <form action="http://localhost:8080/ValidateService/webapi/runSchema/byFileName" method="post" enctype="multipart/form-data">
+  <form name="validationForm" onsubmit="scriptSubmit()" method="post" enctype="multipart/form-data">
 <!--       <form id="my_form" name="validationForm" enctype="multipart/form-data"> --> 
   
   <div class="container" ng-app="evaluator" ng-controller="uploadController"> 
   <div class="row con">
     <div class="col-sm-6 scrollit" > 
       <h2> Input File </h2> 
-      <input type="file" on-read-file="showInput($fileContent)" name="inputFile"></input> 
-      <span class="label label-danger" data-ng-show="submitted && validationForm.inputFile.$error.required">Required!</span>
+      <input type="file" on-read-file="showInput($fileContent)" name="inputFile" required></input> 
       <div class="ifile" ng-if="inputContent"> 
          <pre> {{inputContent}} </pre> 
       </div>
      </div>
     <div class="col-sm-6 scrollit">
       <h3> Schema File </h3> 
-      <input type="file" id=file2 on-read-schema="showSchema($fileContents)" name="schemaFile"></input> 
-      <span class="label label-danger" ng-show="submitted && validationForm.schemaFile.$error.required">Required!</span>
-       <div class="sfile" ng-if="schemaContent">
+      <input type="file" on-read-schema="showSchema($fileContents)" name="schemaFile" required></input> 
+      <div class="sfile" ng-if="schemaContent">
         <pre> {{schemaContent}} </pre>
       </div> 
     </div> 
    </div> 
   <div class="row">
     <div class="col-sm-12 result">
-       <div class="btn-group" style="margin:10px" dropdown>
-       <select ng-model="direction" name="direction">
+       <div class="btn-group" style="margin:10px" dropdown ng-controller="MainCtrl">
+ <!--      <select ng-init="directionSelect = items[0]" ng-model="directionSelect" ng-options="item as item.name for item in items"></select> <pre>{{directionSelect.value}}</pre> --> 
+<select name="direction" required>
 				  <option value="text to xml">Text to XML</option>
-				  <option value="csv to xml">CSV to XML</option>
+				  <option value="CSV To XML">CSV to XML</option>
 				  <option value="xml to text">XML to text</option>
-		</select>
-       <span class="label label-danger" ng-show="submitted && validationForm.direction.$error.required">Required!</span>
+			</select>
+	<input type="submit" value="Run Schema" ></input>
 
-<input type="submit" value="Run Schema"></input>
- <!--     			<button type="button" class="btn btn-danger" send-file>Run Schema</button>
+ <!--     <button onclick="pingServerGET()"">GET test</button><button onclick="pingServerPOST()"">POST test</button> 			
+ 
+ <button type="button" class="btn btn-danger" send-file>Run Schema</button>
 			
       <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>
         <span class="caret"></span>
@@ -55,7 +55,7 @@
     </div>
     <div class="form-group">
       <label for="output">Output: </label> 
-      <textarea class="form-control" rows="12" id="comment"  style="overflow-y:scroll" ng-model="textArea">{{serverReply}}</textarea> 
+      <textarea class="form-control" rows="12" id="comment"  style="overflow-y:scroll" name="comment"></textarea> 
       <label>Save File As: </label>
       <input id="enter_name" ng-model="inputName"> </input>
       <button type="button" class="btn btn-primary" style="margin:10px"  id="add_link" download-file> Download File  </button>      
