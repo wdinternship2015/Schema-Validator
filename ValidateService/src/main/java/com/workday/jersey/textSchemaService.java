@@ -69,32 +69,52 @@ public class textSchemaService {
 	@Path("/byFileName")
 	public Response processByFileName(FormDataMultiPart formParams) {
 	    String output = null;
+		String statusJson;
+		int statusInt;
+		String outputFileName = "";
+		String outputJson;
 		ResponseBuilder response;
-		
-		formParams.getFields();
 		
 		InputStream inputIs = formParams.getField("inputFile").getValueAs(InputStream.class);
 		InputStream schemaIs =formParams.getField("schemaFile").getValueAs(InputStream.class);
-	//	String fileName = formParams.getField("schemaFile").getFormDataContentDisposition().getFileName();
+		String inputFileName = formParams.getField("inputFile").getFormDataContentDisposition().getFileName();
 		String direction = formParams.getField("direction").getValue();
-		//String direction = json.getJSONObject("LabelData").getString("slogan");
 		
+		
+
 		try{
 			if (inputIs == null || schemaIs == null || direction == null) {
-				response=Response.status(CLIENT_FAIL).entity("Can't process input parameters");
+				statusInt = CLIENT_FAIL;
+				statusJson = "false";
+				outputJson = "Can't process input parameters";
 			} else if (direction.equalsIgnoreCase(TEXT_TO_XML)) {
-				output = TransformationProcess.txtToXML(inputIs, schemaIs);
-				response=Response.status(SUCCESS).entity(output);
+				outputJson = TransformationProcess.txtToXML(inputIs, schemaIs);
+				statusInt = SUCCESS;
+				statusJson = "true";
+				outputFileName = getOutputFileName(inputFileName, direction);
 			} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
-				output = TransformationProcess.xmlToText(inputIs, schemaIs);
-				response=Response.status(SUCCESS).entity(output);
+				outputJson = TransformationProcess.xmlToText(inputIs, schemaIs);
+				statusInt = SUCCESS;
+				statusJson = "true";
+				outputFileName = getOutputFileName(inputFileName, direction);
 			} else {
-				response=Response.status(CLIENT_FAIL).entity("Invalid direction");
+				statusInt = CLIENT_FAIL;
+				statusJson = "false";
+				outputJson = "Invalid direction";
 			}
 		} catch (Exception ex){
-			response=Response.status(SERVER_ERROR).entity(ex.getMessage());
+			statusInt = SERVER_ERROR;
+			statusJson = "false";
+			outputJson = ex.getMessage();
+			
+//			output = JsonUtil.buildResponseJson(statusJson, outputFileName, outputJson);
+//			response = Response.status(statusInt).entity(output);
+
+//			response=Response.status(SERVER_ERROR).entity(ex.getMessage());
 		}
 		
+		output = JsonUtil.buildResponseJson(statusJson, outputFileName, outputJson);
+		response = Response.status(statusInt).entity(output);
 		
 		//CORS HttpResponse header
 		response.header("Access-Control-Allow-Origin", "*");
@@ -106,4 +126,16 @@ public class textSchemaService {
 	    return response.build();
 	}
 	
+	private String getOutputFileName(String inputFileName, String direction) {
+		if (inputFileName.length()<=0) {
+			return "";
+		}
+		int i = inputFileName.indexOf(".");
+		if (direction.equalsIgnoreCase(TEXT_TO_XML))  {
+			return inputFileName.substring(0, i-1) + "_TextToXML.xml";
+		} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
+			return inputFileName.substring(0, i-1) + "_XMLToText.txt";
+		}
+		return "";
+	}
 }
