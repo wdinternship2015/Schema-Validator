@@ -75,6 +75,7 @@ public class textSchemaService {
 		
 		InputStream inputIs = formParams.getField("inputFile").getValueAs(InputStream.class);
 		InputStream schemaIs =formParams.getField("schemaFile").getValueAs(InputStream.class);
+	//	String fileName = formParams.getField("schemaFile").getFormDataContentDisposition().getFileName();
 		String direction = formParams.getField("direction").getValue();
 		//String direction = json.getJSONObject("LabelData").getString("slogan");
 		
