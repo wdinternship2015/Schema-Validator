@@ -11,13 +11,6 @@ app.factory('UserFactory', function($resource){
   })
 });
 
-/*app.factory('UserFactory', function(){
-  return {
-    sayHello: function(){
-    return "Hello!"; 
-  }
- }
-});*/
  
 app.controller('uploadController',["$scope","UserFactory", "$http", function($scope, UserFactory, $http){
   $scope.showInput = function($fileContent){
@@ -28,20 +21,36 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   };
   $scope.inputFile; 
   $scope.schemaFile; 
-  /*UserFactory.get(function(track){
-    $scope.textArea = track.singer;
- });*/
-  $scope.textArea ="";
-   /*$http.get('http://localhost:8080/ValidateService/webapi/json/getFile').success(function(data){
-    $scope.textArea = data; 
-  });*/
-  //$scope.textArea = UserFactory.get(); 
-  $scope.inputName="";
-  //$scope.restResult="";
+  $scope.inputName ="";
+  $scope.direction; 
+  //sends the multipart form to the server, and receives the text data and puts into the text area 
+  $scope.submit = function() {
+    var formData = new FormData();
+    formData.append("schemaFile", $scope.schemaFile);
+    formData.append("inputFile", $scope.inputFile);
+    formData.append("direction", $scope.direction);
+    $http({
+       url: "http://localhost:8080/ValidateService/webapi/runSchema/byFileName",
+       data: formData,
+       method: 'POST',
+       transformResponse: function(data){
+         //$scope.textArea = data;
+         return data;
+       }, 
+       headers : {'Content-Type' : undefined},
+     }).success(function (data, status, headers, config) {
+        //alert("success - status(" + status + ")");
+        $scope.textArea = data;
+     }).error(function (data, status, headers, config) {
+        //alert("error - status(" + status + ")");
+        alert("Validation Failed!"); 
+        $scope.textArea = data; 
+     });
+   }
 }]);
 
 
-//loads the input file  and displays content onto the screen  
+//loads the input file from the user's local file system and displays the file's contents onto the screen 
 app.directive('onReadFile', function ($parse, $window) {
   return {
     restrict: 'A',
@@ -60,12 +69,8 @@ app.directive('onReadFile', function ($parse, $window) {
        if(fileName.search("txt") >= 0 || fileName.search("xml") >=0){
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.inputFile = onChangeEvent.target.files[0]; 
-          //console.log(scope.inputFile); 
-          //console.log(JSON.stringify(onChangeEvent.target.files[0]));
           console.log((onChangeEvent.target).files[0].name); 
        } else {
-       //reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
-       //console.log((onChangeEvent.target).files[0].name);
          $window.alert("Need txt or xml file!");  
        }
        });
@@ -73,7 +78,7 @@ app.directive('onReadFile', function ($parse, $window) {
   };
 });
 
-//loads the schema file onto the screen 
+//loads the schema file from user's local file system and displays file's contents onto the screen  
 app.directive('onReadSchema', function ($parse, $window) {
   return {
     restrict: 'A',
@@ -100,6 +105,8 @@ app.directive('onReadSchema', function ($parse, $window) {
   };
 }); 
 
+
+
 //upload both files to the server wrapped in a form. 
 app.directive('sendFile',function($http){
   return{
@@ -109,34 +116,27 @@ app.directive('sendFile',function($http){
       element.on('click', function(onClickEvent){
         console.log(scope.inputFile);
         console.log(scope.schemaFile);
-        
         var formData = new FormData();
         formData.append("schemaFile", scope.schemaFile);
-        formData.append("inputFile", scope.inputFile); 
+        formData.append("inputFile", scope.inputFile);
+        formData.append("direction", "text to xml"); 
         $http.post("http://localhost:8080/ValidateService/webapi/runSchema/byFileName", formData, {
           transformRequest: angular.identity, 
           withCredentials: true, 
           headers: {'Content-type':undefined} 
-        }); 
+        });
+        $http.post('http://localhost:8080/ValidateService/webapi/runSchema/byFileName').success(function(data){
+    $scope.textArea = data; 
+  }); 
       });
-   
+      
     }
   };
 
 
 });
 
-
-
-
-
-
-
-
-
-
-
-//creates file from text on the text area box. 
+//creates file from text on the text area box and saves file onto user's local file system 
 app.directive('downloadFile', function($compile, $window){
   return{
     restrict:'AE',  
@@ -164,99 +164,6 @@ app.directive('downloadFile', function($compile, $window){
 
 });
 
-//upload both files to the server wrapped in a form. 
-/*app.directive('uploadFile', function($scope, $http){
-  return{
-    restrict: 'A', 
-    scope: false, 
-    link: function(scope, element, attrs){
-      element.on('click', function(onClickEvent){
-      //var formData = new FormData();
-      console.log(scope.inputFile); 
-      console.log(scope.schemaFile); 
-      formData.append('inputFile', scope.inputFile);
-      formData.append('schemaFile', scope.schemaFile); 
-      $http.post("http://localhost:8080/ValidateService/webapi/json/getForm", formData, {
-        transformRequest: angular.identity, 
-        withCredentials: true,
-        headers: {'Content-Type': undefined}
-      }) 
-      .success(function(){
-      })
-      .error(function(){
-      });  
-    })
-   }
- }
-});*/
 
-
-function scriptSubmit(){
-	var form = document.forms.namedItem("validationForm");
-	var outForm = new FormData(form);
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:8080/ValidateService/webapi/runSchema/byFileName', true);
-    xhr.onload = function() {
-    	if (xhr.status == 200) {
-    		document.getElementById("comment").value = xhr.responseText;
-    		document.getElementById("comment").style.color = "black";
-    	} else {
-    		//alert('Validation failed');
-    		document.getElementById("comment").value = xhr.responseText;
-    		document.getElementById("comment").style.color = "red";
-    	}
-    };
-    xhr.onerror = function() {
-        alert('Woops, there was an error making the request.');
-    };
-    xhr.send(outForm);
-}
-
-function pingServerGET(){
-       // alert("ping server");
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/ValidateService/webapi/testResponse/GET');
-        xhr.onload = function() {
-        	if (xhr.status == 200) {
-        		var msg = xhr.responseText;
-        		alert('success ' + msg);
-        		document.getElementById("comment").value = msg;
-        	}    
-        	
-            //var text = JSON.parse(xhr.responseText);
-            //alert('Response from CORS request to ' + url + ': ' + xhr.responseText);
-          };
-          xhr.onerror = function() {
-            alert('Woops, there was an error making the request.');
-          };
-        xhr.send();
-}
-
-function pingServerPOST(){
-   // alert("ping server");
-	var xhr = new XMLHttpRequest();
-	var param = "name=blah";
-    xhr.open('POST', 'http://localhost:8080/ValidateService/webapi/testResponse/POST', true);
-    xhr.onload = function() {
-            alert('success ' + xhr.responseText);
-      };
-      xhr.onerror = function() {
-        alert('Woops, there was an error making the request.' + xhr.responseText);
-        //$scope.textArea = xhr.responseText;
-      };
-    xhr.send(param);
-}
-
-
-app.controller('MainCtrl', function($scope) {
-	$scope.items = [
-	     { value: 'Text to XML', name: 'Text to XML' },
-	     { value: 'XML to text', name: 'XML to text' },
-	     { value: 'CSV to XML', name: 'CSV to XML' }
-	   ];
-	   //var selection = directionSelection.value;
-	  //$scope.selection = $scope.directionSelection.value;
-	//alert($directionSelection.value);
-	});
 
 
