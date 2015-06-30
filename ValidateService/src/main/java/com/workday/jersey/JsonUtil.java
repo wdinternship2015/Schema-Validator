@@ -16,6 +16,8 @@ public class JsonUtil {
 				objectClose;
 	}
 	
-	
+	static public String buildResponseString(String fileName, String output) {
+		return fileName + " " + output;
+	}
 
 }

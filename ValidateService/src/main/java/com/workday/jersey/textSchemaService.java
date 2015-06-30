@@ -72,7 +72,7 @@ public class textSchemaService {
 		String statusJson;
 		int statusInt;
 		String outputFileName = "";
-		String outputJson;
+		String outputString;
 		ResponseBuilder response;
 		
 		InputStream inputIs = formParams.getField("inputFile").getValueAs(InputStream.class);
@@ -86,34 +86,34 @@ public class textSchemaService {
 			if (inputIs == null || schemaIs == null || direction == null) {
 				statusInt = CLIENT_FAIL;
 				statusJson = "false";
-				outputJson = "Can't process input parameters";
+				outputString = "Can't process input parameters";
 			} else if (direction.equalsIgnoreCase(TEXT_TO_XML)) {
-				outputJson = TransformationProcess.txtToXML(inputIs, schemaIs);
+				outputString = TransformationProcess.txtToXML(inputIs, schemaIs);
 				statusInt = SUCCESS;
 				statusJson = "true";
 				outputFileName = getOutputFileName(inputFileName, direction);
 			} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
-				outputJson = TransformationProcess.xmlToText(inputIs, schemaIs);
+				outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
 				statusInt = SUCCESS;
 				statusJson = "true";
 				outputFileName = getOutputFileName(inputFileName, direction);
 			} else {
 				statusInt = CLIENT_FAIL;
 				statusJson = "false";
-				outputJson = "Invalid direction";
+				outputString = "Invalid direction";
 			}
 		} catch (Exception ex){
 			statusInt = SERVER_ERROR;
 			statusJson = "false";
-			outputJson = ex.getMessage();
+			outputString = ex.getMessage();
 			
 //			output = JsonUtil.buildResponseJson(statusJson, outputFileName, outputJson);
 //			response = Response.status(statusInt).entity(output);
 
 //			response=Response.status(SERVER_ERROR).entity(ex.getMessage());
 		}
-		
-		output = JsonUtil.buildResponseJson(statusJson, outputFileName, outputJson);
+//		output = JsonUtil.buildResponseJson(statusJson, outputFileName, outputJson);
+		output = JsonUtil.buildResponseString(outputFileName, outputString);
 		response = Response.status(statusInt).entity(output);
 		
 		//CORS HttpResponse header
@@ -128,7 +128,7 @@ public class textSchemaService {
 	
 	private String getOutputFileName(String inputFileName, String direction) {
 		if (inputFileName.length()<=0) {
-			return "";
+			return "null";
 		}
 		int i = inputFileName.indexOf(".");
 		if (direction.equalsIgnoreCase(TEXT_TO_XML))  {

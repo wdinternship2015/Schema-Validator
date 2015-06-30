@@ -22,7 +22,7 @@ public class TextSchemaUtil {
 			TextSchemaProcessor processor = new TextSchemaProcessor(schemaIs, null);
 			return processor;	
 		} catch (TextSchemaException ex) {
-			throw new Exception("Failed to create textSchemaProcessor.    " + ex.getMessage());
+			throw new Exception("Failed to create textSchemaProcessor.    \n" + ex.getMessage());
 		}	
 	}
 	
@@ -42,7 +42,7 @@ public class TextSchemaUtil {
 		      textIn.close();		      
 	      } catch (Exception ex) {
 	    	  ex.printStackTrace();
-	    	  throw new Exception("Text conversion to XML failed.    " + ex.getMessage());
+	    	  throw new Exception("Text conversion to XML failed.    \n" + ex.getMessage());
 	      } 
 	      String xmlString = xmlOut.toString();
 		      return xmlString;	      
@@ -64,7 +64,7 @@ public class TextSchemaUtil {
 		      textOut.close();		      
 	      } catch (Exception ex) {
 	    	  ex.printStackTrace();
-	    	  throw new Exception("XML conversion to text failed. " + ex.getMessage());
+	    	  throw new Exception("XML conversion to text failed. \n" + ex.getMessage());
 	      } 
 	      String textString = textOut.toString();
 		      return textString;	      

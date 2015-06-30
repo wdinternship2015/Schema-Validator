@@ -24,7 +24,7 @@ public class TransformationProcess {
 		TextSchemaProcessor processor = TextSchemaUtil.getTextSchemaProcessor(schemaIs);
 		String xmlString = TextSchemaUtil.textToXMLString(processor, textIs);
 		
-		return xmlString;
+		return PrettyPrintXML.formatXML(xmlString);
 	}
 	
 	/**
