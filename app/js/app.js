@@ -23,6 +23,7 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   $scope.schemaFile; 
   $scope.inputName ="";
   $scope.direction; 
+  $scope.textArea="";
   //sends the multipart form to the server, and receives the text data and puts into the text area 
   $scope.submit = function() {
     var formData = new FormData();
@@ -35,16 +36,20 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
        method: 'POST',
        transformResponse: function(data){
          //$scope.textArea = data;
-         return data;
+         return JSON.parse(data);
        }, 
        headers : {'Content-Type' : undefined},
      }).success(function (data, status, headers, config) {
         //alert("success - status(" + status + ")");
-        $scope.textArea = data;
+        $scope.textArea = data.outText;
+        var text = document.querySelector('#comment'); 
+        text.style.color="black";
      }).error(function (data, status, headers, config) {
         //alert("error - status(" + status + ")");
         alert("Validation Failed!"); 
-        $scope.textArea = data; 
+        $scope.textArea = data.outText;
+        var text = document.querySelector('#comment');
+        text.style.color="red";  
      });
    }
 }]);
@@ -142,20 +147,30 @@ app.directive('downloadFile', function($compile, $window){
     restrict:'AE',  
     scope: false, 
     link: function(scope, element, attrs){
+      var newElement; 
       element.on('click', function(onClickEvent) {
         console.log(scope.textArea);
         var data = new Blob([scope.textArea], {type: 'text/plain'}); 
-        console.log(data); 
+        console.log("Blob: " + data); 
         var textFile = $window.URL.createObjectURL(data); 
-        console.log(textFile); 
+        console.log("URL: " + textFile); 
         console.log("Input: " + scope.inputName); 
         angular.element(document.querySelector('#add_link')).append($compile(
-          '<a id=new_elem download="' + scope.inputName + '"'  + 'href="' + textFile + '">' + '</a>')(scope));
+         '<a id=new_elem download="' + scope.inputName + '"'  + 'href="' + textFile + '">' + '</a>')(scope));
         //$window.location.href = textFile;
         var elem = document.querySelector('#new_elem'); 
-        elem.click();   
+         elem.click();
+         delete elem;
+         var elem2 = document.querySelector('#new_elem');
+         elem2.remove();  
+         //elem.remove(); 
+         //elem.remove(); 
+         //$(".save").remove(); 
+         //elem.remove();
+         //element.removeAttr('new_elem'); 
+        //elem.removeAttr("href"); 
+        //$window.URL.revokeObjectURL(textFile);   
      });  
-       
       
       
      }
@@ -164,6 +179,30 @@ app.directive('downloadFile', function($compile, $window){
 
 });
 
-
+function scriptSubmit(){
+var form = document.forms.namedItem("validationForm");
+var outForm = new FormData(form);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:8080/ValidateService/webapi/runSchema/byFileName', true);
+    xhr.onload = function() {
+    if (xhr.status == 200) {
+    var responseJson = JSON.parse(xhr.responseText);
+    document.getElementById("comment").value = responseJson.outText;
+    document.getElementById("comment").style.color = "black";
+    document.getElementById("enter_name").value = responseJson.fileName;
+    document.getElementById("add_link").disabled = false;
+    } else {
+    var responseJson = JSON.parse(xhr.responseText);   
+    document.getElementById("comment").value = responseJson.outText;
+    document.getElementById("comment").style.color = "red";    
+    document.getElementById("enter_name").value = "";
+    document.getElementById("add_link").disabled = true;
+    }
+    };
+    xhr.onerror = function() {
+        alert('Woops, there was an error making the request.');
+    };
+    xhr.send(outForm);
+}
 
 

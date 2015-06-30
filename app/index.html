@@ -8,7 +8,7 @@
   <script type="text/javascript" src="js/angular-resource.js"></script> 
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
-  <form name="validationForm"  method="post" enctype="multipart/form-data">
+  <form name="validationForm" method="post" enctype="multipart/form-data">
   <div class="container" ng-app="evaluator" ng-controller="uploadController"> 
   <div class="row con">
     <div class="col-sm-6 scrollit" > 
@@ -35,7 +35,8 @@
 	  <option value="XML To Text">XML to text</option>
         </select>
       <span class="label label-danger" ng-show="submitted && validationForm.direction.$error.required">Required!</span>  
-      <input type="submit" value="Run Schema" ng-click="submit()"></input> 
+      <!--<input type="submit" value="Run Schema"></input> --> 
+       <input type="submit" value="Run Schema" ng-click="submit()"></input>  
        <!--<div class="btn-group" style="margin:10px" dropdown>
       <button type="button" class="btn btn-danger" send-file>Run Schema</button>
       <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>

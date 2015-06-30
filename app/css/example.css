@@ -10,3 +10,6 @@
   overflow-y:scroll;
   height:200px; 
 }
+textArea{
+  resize:none;
+}
