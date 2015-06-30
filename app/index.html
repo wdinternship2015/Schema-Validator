@@ -13,14 +13,14 @@
   <div class="row con">
     <div class="col-sm-6 scrollit" > 
       <h2> Input File </h2> 
-      <input type="file" on-read-file="showInput($fileContent)" name="inputFile" ng-required="true"></input> 
+      <input type="file" on-read-file="showInput($fileContent)" name="inputFile" required></input> 
       <div class="ifile" ng-if="inputContent"> 
          <pre> {{inputContent}} </pre> 
       </div>
      </div>
     <div class="col-sm-6 scrollit">
       <h3> Schema File </h3> 
-      <input type="file" id=file2 on-read-schema="showSchema($fileContents)" name="schemaFile" ng-required="true"></input> 
+      <input type="file" id=file2 on-read-schema="showSchema($fileContents)" name="schemaFile" required></input> 
        <div class="sfile" ng-if="schemaContent">
         <pre> {{schemaContent}} </pre>
       </div> 
@@ -30,13 +30,14 @@
     <div class="col-sm-12 result">
       <div class "btn-group" style="margin:10px" dropdown>
         <select ng-model="direction" name="direction" required>
-          <option value="TEXT To XML">TEXT to XML</option>
+          <option ng-selected="true" value="TXT To XML">TEXT to XML</option>
 	  <option value="CSV To XML">CSV to XML</option>
-	  <option value="XML To TEXT">XML to TEXT</option>
+	  <option value="XML To TXT">XML to TEXT</option>
         </select>
-      <span class="label label-danger" ng-show="submitted && validationForm.direction.$error.required">Required!</span>  
+      <!--<span class="label label-danger" ng-show="submitted && validationForm.inputFile.$invalid">Required!</span> -->  
       <!--<input type="submit" value="Run Schema"></input> --> 
-       <input type="submit" value="Run Schema" ng-click="submit()"></input>   
+       <!--<input type="submit" value="Run Schema" ng-disabled="validationForm.$invalid" ng-click="submit()" ></input> -->
+       <button type="submit"  ng-click="submit()">Run Schema</button>   
        <!--<div class="btn-group" style="margin:10px" dropdown>
       <button type="button" class="btn btn-danger" send-file>Run Schema</button>
       <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>

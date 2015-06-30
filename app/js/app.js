@@ -22,13 +22,17 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   $scope.inputFile; 
   $scope.schemaFile; 
   $scope.inputName ="";
-  $scope.direction; 
+  $scope.direction= "TEXT TO XML"; 
   $scope.textArea="";
   $scope.disable = true;
   $scope.inputFileName="";
-  $scoepe.schemaName="";
+  $scope.schemaName="";
   //sends the multipart form to the server, and receives the text data and puts into the text area 
   $scope.submit = function() {
+    if($scope.inputFile == null || $scope.schemaFile == null){
+      $scope.textArea=""; 
+      return; 
+    }
     var formData = new FormData();
     formData.append("schemaFile", $scope.schemaFile);
     formData.append("inputFile", $scope.inputFile);
@@ -40,6 +44,7 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
        transformResponse: function(data){
          //$scope.textArea = data;
          //return JSON.parse(data);
+         //alert(data); 
          return data;
        }, 
        headers : {'Content-Type' : undefined},
@@ -205,9 +210,23 @@ app.directive('downloadFile', function($compile, $window){
     scope: false, 
     link: function(scope, element, attrs){
       var input = scope.inputFileName; 
-      var schema = scope.schemaName; 
-      
-    });
+      var schema = scope.schemaName;
+      var dir = scope.direction;
+      var selectInput= dir.substr(0,4); 
+      var selectOutput = dir.slice(-4); 
+      console.log(dir);  
+      var inputExt = input.substr(input.indexOf(".") + 1); 
+      var schemaExt = schema.substr(schema.indexOf(".") + 1); 
+      if(inputExt == "txt" && selectInput != "TEXT"){
+        alert("Invalid Direction");
+      }  else if(inputExt == "csv" && selectInput !="CSV "){
+        alert("Invalid Direction");
+      } else if(inputExt == "xml" && selectInput !="XML "){
+        alert("Invalid Direction");
+      } else {
+        console.log("Valid"); 
+     }       
+    };
   }; 
 
 });*/
