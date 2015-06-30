@@ -25,6 +25,8 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   $scope.direction; 
   $scope.textArea="";
   $scope.disable = true;
+  $scope.inputFileName="";
+  $scoepe.schemaName="";
   //sends the multipart form to the server, and receives the text data and puts into the text area 
   $scope.submit = function() {
     var formData = new FormData();
@@ -37,21 +39,28 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
        method: 'POST',
        transformResponse: function(data){
          //$scope.textArea = data;
-         return JSON.parse(data);
+         //return JSON.parse(data);
+         return data;
        }, 
        headers : {'Content-Type' : undefined},
      }).success(function (data, status, headers, config) {
         //alert("success - status(" + status + ")");
-        $scope.textArea = data.outText;
+        var space = data.indexOf(" ");
+        var fileName = data.substring(0, space);
+        var outText = data.substring(space + 1); 
+        $scope.textArea = outText;
         var text = document.querySelector('#comment'); 
         text.style.color="black";
         $scope.disable = false;
-        $scope.inputName = data.fileName;
-        (document.querySelector('#enter_name')).value=data.fileName;  
+        $scope.inputName =fileName;
+        (document.querySelector('#enter_name')).value=fileName;  
      }).error(function (data, status, headers, config) {
         //alert("error - status(" + status + ")");
         //alert("Validation Failed!"); 
-        $scope.textArea = data.outText;
+        var space = data.indexOf(" ");
+        var fileName = data.substring(0, space);
+        var outText = data.substring(space + 1);
+        $scope.textArea = outText;
         var text = document.querySelector('#comment');
         text.style.color="red"; 
         $scope.disable = true;
@@ -79,9 +88,10 @@ app.directive('onReadFile', function ($parse, $window) {
            }); 
        };       
        var fileName = onChangeEvent.target.files[0].name; 
+       scope.inputFileName = fileName; 
        if(fileName.search("txt") >= 0 || fileName.search("xml") >=0){
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
-          scope.inputFile = onChangeEvent.target.files[0]; 
+          scope.inputFile = onChangeEvent.target.files[0];  
           console.log((onChangeEvent.target).files[0].name); 
        } else {
          $window.alert("Need txt or xml file!");  
@@ -106,6 +116,7 @@ app.directive('onReadSchema', function ($parse, $window) {
            });
          };
          var fileName = onChangeEvent.target.files[0].name;
+         scope.schemaName = fileName; 
          if(fileName.search("xsd") >= 0){ 
            reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
            scope.schemaFile = onChangeEvent.target.files[0]; 
@@ -186,6 +197,23 @@ app.directive('downloadFile', function($compile, $window){
   }
 
 });
+
+//checks the direction of the input file. 
+/*app.directive('checkDirection', function(){
+  return{
+    restrict: 'A',
+    scope: false, 
+    link: function(scope, element, attrs){
+      var input = scope.inputFileName; 
+      var schema = scope.schemaName; 
+      
+    });
+  }; 
+
+});*/
+
+
+
 
 function scriptSubmit(){
 var form = document.forms.namedItem("validationForm");
