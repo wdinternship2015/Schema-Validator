@@ -99,7 +99,11 @@ app.directive('onReadFile', function ($parse, $window) {
           scope.inputFile = onChangeEvent.target.files[0];  
           console.log((onChangeEvent.target).files[0].name); 
        } else {
-         $window.alert("Need txt or xml file!");  
+         //$window.alert("Need txt or xml file!");
+         var text = document.querySelector('#comment'); 
+         text.value = "Need txt of xml file!";
+         text.style.color="red";
+         element.val(null);   
        }
        });
      }
@@ -127,7 +131,11 @@ app.directive('onReadSchema', function ($parse, $window) {
            scope.schemaFile = onChangeEvent.target.files[0]; 
            console.log((onChangeEvent.target).files[0].name);
          } else {
-          $window.alert("Need an xsd file!"); 
+          //$window.alert("Need an xsd file!");
+          var text = document.querySelector('#comment'); 
+         text.value = "Need an xsd file!";
+         text.style.color="red"; 
+         element.val(null); 
          } 
        });
      }
