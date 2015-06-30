@@ -24,6 +24,7 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   $scope.inputName ="";
   $scope.direction; 
   $scope.textArea="";
+  $scope.disable = true;
   //sends the multipart form to the server, and receives the text data and puts into the text area 
   $scope.submit = function() {
     var formData = new FormData();
@@ -44,12 +45,19 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
         $scope.textArea = data.outText;
         var text = document.querySelector('#comment'); 
         text.style.color="black";
+        $scope.disable = false;
+        $scope.inputName = data.fileName;
+        (document.querySelector('#enter_name')).value=data.fileName;  
      }).error(function (data, status, headers, config) {
         //alert("error - status(" + status + ")");
-        alert("Validation Failed!"); 
+        //alert("Validation Failed!"); 
         $scope.textArea = data.outText;
         var text = document.querySelector('#comment');
-        text.style.color="red";  
+        text.style.color="red"; 
+        $scope.disable = true;
+        (document.querySelector('#enter_name')).value="";        
+        $scope.inputName="";
+ 
      });
    }
 }]);
