@@ -36,7 +36,7 @@
         </select>
       <span class="label label-danger" ng-show="submitted && validationForm.direction.$error.required">Required!</span>  
       <!--<input type="submit" value="Run Schema"></input> --> 
-       <input type="submit" value="Run Schema" ng-click="submit()"></input>  
+       <input type="submit" value="Run Schema" ng-click="submit()"></input>   
        <!--<div class="btn-group" style="margin:10px" dropdown>
       <button type="button" class="btn btn-danger" send-file>Run Schema</button>
       <button type="button" class="btn btn-danger dropdown-toggle" dropdown-toggle>
@@ -53,8 +53,8 @@
       <label for="output">Output: </label> 
       <textarea class="form-control" rows="12" id="comment"  style="overflow-y:scroll" ng-model="textArea"></textarea> 
       <label>Save File As: </label>
-      <input id="enter_name" ng-model="inputName"> </input>
-      <button type="button" class="btn btn-primary" style="margin:10px"  id="add_link" download-file> Download File  </button>      
+      <input id="enter_name" ng-model="inputName" ng-disabled="disable"> </input>
+      <button type="button" class="btn btn-primary" style="margin:10px"  id="add_link" ng-disabled="disable" download-file> Download File  </button>      
     </div> 
   </div>
   </div>
