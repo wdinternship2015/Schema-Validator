@@ -1,6 +1,6 @@
 package com.workday.jersey;
 
-public class JsonUtil {
+public class ResponseMessageUtil {
 	
 	static final String objectOpen = "{ ";
 	static final String objectClose = "}";

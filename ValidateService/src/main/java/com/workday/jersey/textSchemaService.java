@@ -20,8 +20,8 @@ public class textSchemaService {
 	int SUCCESS = 200;
 	int CLIENT_FAIL = 400;
 	int SERVER_ERROR = 500;
-	String TEXT_TO_XML = "text to xml";
-	String XML_TO_TEXT = "xml to text";
+	String TEXT_TO_XML = "txt to xml";
+	String XML_TO_TEXT = "xml to txt";
 	
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)    
@@ -80,40 +80,39 @@ public class textSchemaService {
 		String inputFileName = formParams.getField("inputFile").getFormDataContentDisposition().getFileName();
 		String direction = formParams.getField("direction").getValue();
 		
-		
+		if(isDirectionValid(inputFileName, direction)) {
 
-		try{
-			if (inputIs == null || schemaIs == null || direction == null) {
-				statusInt = CLIENT_FAIL;
+			try{
+				if (inputIs == null || schemaIs == null || direction == null) {
+					statusInt = CLIENT_FAIL;
+					statusJson = "false";
+					outputString = "Can't process input parameters";
+				} else if (direction.equalsIgnoreCase(TEXT_TO_XML)) {
+					outputString = TransformationProcess.txtToXML(inputIs, schemaIs);
+					statusInt = SUCCESS;
+					statusJson = "true";
+					outputFileName = getOutputFileName(inputFileName, direction);
+				} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
+					outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
+					statusInt = SUCCESS;
+					statusJson = "true";
+					outputFileName = getOutputFileName(inputFileName, direction);
+				} else {
+					statusInt = CLIENT_FAIL;
+					statusJson = "false";
+					outputString = "Invalid direction";
+				}
+			} catch (Exception ex){
+				statusInt = SERVER_ERROR;
 				statusJson = "false";
-				outputString = "Can't process input parameters";
-			} else if (direction.equalsIgnoreCase(TEXT_TO_XML)) {
-				outputString = TransformationProcess.txtToXML(inputIs, schemaIs);
-				statusInt = SUCCESS;
-				statusJson = "true";
-				outputFileName = getOutputFileName(inputFileName, direction);
-			} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
-				outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
-				statusInt = SUCCESS;
-				statusJson = "true";
-				outputFileName = getOutputFileName(inputFileName, direction);
-			} else {
-				statusInt = CLIENT_FAIL;
-				statusJson = "false";
-				outputString = "Invalid direction";
+				outputString = ex.getMessage();
 			}
-		} catch (Exception ex){
-			statusInt = SERVER_ERROR;
+		} else {
+			statusInt = CLIENT_FAIL;
 			statusJson = "false";
-			outputString = ex.getMessage();
-			
-//			output = JsonUtil.buildResponseJson(statusJson, outputFileName, outputJson);
-//			response = Response.status(statusInt).entity(output);
-
-//			response=Response.status(SERVER_ERROR).entity(ex.getMessage());
+			outputString = "Invalid direction.  \nInput file type does not match transformation direction.";
 		}
-//		output = JsonUtil.buildResponseJson(statusJson, outputFileName, outputJson);
-		output = JsonUtil.buildResponseString(outputFileName, outputString);
+		output = ResponseMessageUtil.buildResponseString(outputFileName, outputString);
 		response = Response.status(statusInt).entity(output);
 		
 		//CORS HttpResponse header
@@ -126,6 +125,15 @@ public class textSchemaService {
 	    return response.build();
 	}
 	
+	private boolean isDirectionValid(String inputFileName, String direction) {
+		int i = inputFileName.indexOf(".");
+		String extention = inputFileName.substring(i+1);
+		int j = direction.indexOf(" ");
+		String directionInputParamType = direction.substring(0,  j);
+		return extention.equalsIgnoreCase(directionInputParamType);		
+	}
+	
+	
 	private String getOutputFileName(String inputFileName, String direction) {
 		if (inputFileName.length()<=0) {
 			return "null";
@@ -136,6 +144,6 @@ public class textSchemaService {
 		} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
 			return inputFileName.substring(0, i-1) + "_XMLToText.txt";
 		}
-		return "";
+		return "null";
 	}
 }
