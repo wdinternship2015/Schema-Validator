@@ -22,7 +22,7 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   $scope.inputFile; 
   $scope.schemaFile; 
   $scope.inputName ="";
-  $scope.direction= "TEXT TO XML"; 
+  $scope.direction= "TXT TO XML"; 
   $scope.textArea="";
   $scope.disable = true;
   $scope.inputFileName="";
@@ -95,6 +95,8 @@ app.directive('onReadFile', function ($parse, $window) {
        var fileName = onChangeEvent.target.files[0].name; 
        scope.inputFileName = fileName; 
        if(fileName.search("txt") >= 0 || fileName.search("xml") >=0){
+    	  var text = document.querySelector('#comment'); 
+    	  text.value = "";
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.inputFile = onChangeEvent.target.files[0];  
           console.log((onChangeEvent.target).files[0].name); 
@@ -127,7 +129,9 @@ app.directive('onReadSchema', function ($parse, $window) {
          var fileName = onChangeEvent.target.files[0].name;
          scope.schemaName = fileName; 
          if(fileName.search("xsd") >= 0){ 
-           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+       	  var text = document.querySelector('#comment'); 
+    	  text.value = "";
+          reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
            scope.schemaFile = onChangeEvent.target.files[0]; 
            console.log((onChangeEvent.target).files[0].name);
          } else {
