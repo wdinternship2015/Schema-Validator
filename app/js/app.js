@@ -125,9 +125,14 @@ app.directive('onReadFile', function ($parse, $window) {
        } else {
          //$window.alert("Need txt or xml file!");
          var text = document.querySelector('#comment'); 
-         text.value = "Input file needs to be a txt of xml file!";
+         text.value = "Input file needs to be a txt or xml file!";
          text.style.color="red";
          document.querySelector('#input').style.display="none";
+             scope.$apply(function(){
+           scope.inputFile = null; 
+           scope.textArea = "Input file needs to be a txt or xml file!!"; 
+         });
+
           element.val(null);   
        }       
        });
@@ -173,10 +178,14 @@ app.directive('onReadSchema', function ($parse, $window) {
            console.log((onChangeEvent.target).files[0].name);
          } else {
           //$window.alert("Need an xsd file!");
-             document.querySelector('#schema').style.display="block";
+             document.querySelector('#schema').style.display="none";
           var text = document.querySelector('#comment'); 
          text.value = "Schema File needs to be an xsd file!";
          text.style.color="red"; 
+         scope.$apply(function(){
+           scope.schemaFile = null; 
+           scope.textArea = "Schema File needs to be an xsd file!"; 
+         });
          element.val(null); 
          } 
        });
