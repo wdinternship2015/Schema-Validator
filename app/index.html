@@ -13,39 +13,76 @@
   <div class="row con">
     <div class="col-sm-6 scrollit" > 
       <h3> Input File </h3> 
-      <input type="file" on-read-file="showInput($fileContent)" name="inputFile" required></input> 
-      <div class="ifile" ng-if="inputContent"> 
-         <pre> {{inputContent}} </pre> 
+      <input type="file" on-read-file="showInput($fileContent)"  name="inputFile" required></input> 
+      <!--<div class="ifile" ng-if="inputContent "> -->
+      <div class="ifile"  id="input" style="display:none" > 
+         <!--<span id="input" ng-if="inputContent"  style="display:block"> {{inputContent}} </span> --> 
+         <pre>{{inputContent}} </pre>  
       </div>
      </div>
     <div class="col-sm-6 scrollit">
       <h3> Schema File </h3> 
       <input type="file" id=file2 on-read-schema="showSchema($fileContents)" name="schemaFile" required></input> 
-       <div class="sfile" ng-if="schemaContent">
+       <!--<div class="sfile" ng-if="schemaContent"> -->
+        <div class="sfile" id="schema" style="display:none">
         <pre> {{schemaContent}} </pre>
       </div> 
     </div> 
    </div> 
   <div class="row">
     <div class="col-sm-12 result">
-      <div class="btn-group" style="margin:10px;" dropdown>
+      <div class "btn-group" style="margin:10px" dropdown>
         <select ng-model="direction" name="direction" required>
           <option ng-selected="true" value="TXT To XML">TXT to XML</option>
 	  <option value="CSV To XML">CSV to XML</option>
 	  <option value="XML To TXT">XML to TXT</option>
         </select>
-        <button type="submit"  ng-click="submit()">Run Schema</button>   
+       <button type="submit"  ng-click="submit()">Run Schema</button>   
     </div>
     <div class="form-group">
       <label for="output">Output: </label> 
       <textarea class="form-control" rows="12" id="comment"  style="overflow-y:scroll" ng-model="textArea"></textarea> 
       <div class="pull-right">
-      	<input id="enter_name" ng-model="inputName" ng-disabled="disable" maxlength="50" size="50"> </input>
-      	<button type="button" class="btn btn-primary" style="margin:10px"  id="add_link" ng-disabled="disable" download-file> Save As  </button>      
-      </div>
+      <input id="enter_name" ng-model="inputName" ng-disabled="disable" maxLength="50" size="50"> </input>
+      <button type="button" class="btn btn-primary" style="margin:10px"  id="add_link" ng-disabled="disable" download-file> Save As  </button>      
+      </div> 
     </div> 
   </div>
   </div>
   </form>
   </div>
+ <!--<body ng-controller="uploadController">
+    <div class="container">
+    <h1> Input File </h1>  
+    <input type="file" id=file1  on-read-file="showInput($fileContent)"> </input>
+    <div ng-if="inputContent">
+    <p> {{inputContent}} </p>
+    </div>
+    </div> 
+    <div class="panel panel-default">
+    <h2> Schema File </h2>
+    <input type="file" id=file2 on-read-schema="showSchema($fileContents)"></input> 
+    <div ng-if="schemaContent">
+    <p> {{schemaContent}} </p> 
+    </div> 
+    </div> 
+    <div class= "boxed3">
+      <textarea  Name="content" ROWS= 20 COLS=233 ng-model="textArea"></textarea> 
+      <input id =add_link type="button"  value="Download File" download-file>  </input>
+      <div id="add_link2"></div> 
+    <div class="container-fluid">
+      <div class="row"> 
+        <div class="col-lg-6"> 
+           Container Left 
+        </div> 
+     <div class="col-lg-6"> 
+         Container Right
+      </div>
+      </div>
+    </div>
+    <textarea autocomplete="off" class="container" id="textareaCode" wrap="logical" spellcheck="false">         
+       
+  </div> 
+  </body> 
+<-->  
 </html>

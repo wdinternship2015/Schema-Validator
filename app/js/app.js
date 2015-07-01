@@ -27,6 +27,7 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   $scope.disable = true;
   $scope.inputFileName="";
   $scope.schemaName="";
+  $scope.displayInput=true;
   //sends the multipart form to the server, and receives the text data and puts into the text area 
   $scope.submit = function() {
     if($scope.inputFile == null || $scope.schemaFile == null){
@@ -85,39 +86,42 @@ app.directive('onReadFile', function ($parse, $window) {
     link: function(scope, element, attrs) {
        var fn = $parse(attrs.onReadFile);    
        element.on('change', function(onChangeEvent) {
-//	    	alert(element);
          var reader = new FileReader();       
 	 reader.onload = function(onLoadEvent) {
            scope.$apply(function(){
            fn( scope,{$fileContent: onLoadEvent.target.result}); 
            //fn(scope, {inputFile: onLoadEvent.target.files[0]}); 
            }); 
-       };   
-      
-       if (!onChangeEvent.target.files[0]) {
- //   	   alert('no file selected');
-    	   return;
-       }
-       var fileName = onChangeEvent.target.files[0].name; 
+       };      
+       if(onChangeEvent.target.files[0] == null){
+           document.querySelector('#input').style.display="none";   
+           //console.log("InputContent: " + scope.inputContent); 
+           scope.$apply(function(){
+             scope.inputFile = null; 
+             scope.disable= true;
+             scope.textArea=""; 
+           });  
+           return;
+       } 
+       document.querySelector('#input').style.display="block";
+       console.log("Here!");
+       scope.displayInput = false; 
+       var fileName = onChangeEvent.target.files[0].name;
+       console.log("File Name: " + fileName);
        scope.inputFileName = fileName; 
        if(fileName.search("txt") >= 0 || fileName.search("xml") >=0){
     	  var text = document.querySelector('#comment'); 
     	  text.value = "";
-    	  fileContent="";
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.inputFile = onChangeEvent.target.files[0];  
           console.log((onChangeEvent.target).files[0].name); 
        } else {
          //$window.alert("Need txt or xml file!");
          var text = document.querySelector('#comment'); 
-         text.value = "Infput file needs to be a txt of xml file!";
+         text.value = "Need txt of xml file!";
          text.style.color="red";
          element.val(null);   
-         document.getElementById("enter_name").value = "";
-         document.getElementById("enter_name").disabled = true;
-         document.getElementById("add_link").disabled = true;
        }
-       
        });
      }
   };
@@ -137,11 +141,16 @@ app.directive('onReadSchema', function ($parse, $window) {
            fn(scope, {$fileContents:onLoadEvent.target.result});
            });
          };
-         
-         if (!onChangeEvent.target.files[0]) {
-        	 //   	   alert('no file selected');
-        	    	   return;
-        }
+         if(onChangeEvent.target.files[0] == null){
+           document.querySelector('#schema').style.display="none";
+           scope.$apply(function(){
+             scope.disable= true;
+             scope.textArea = "";
+             scope.schemaFile = null;
+           });
+           return;
+         }        
+         document.querySelector('#schema').style.display="block"; 
          var fileName = onChangeEvent.target.files[0].name;
          scope.schemaName = fileName; 
          if(fileName.search("xsd") >= 0){ 
@@ -153,12 +162,9 @@ app.directive('onReadSchema', function ($parse, $window) {
          } else {
           //$window.alert("Need an xsd file!");
           var text = document.querySelector('#comment'); 
-         text.value = "Schema File needs to be an xsd file!";
+         text.value = "Need an xsd file!";
          text.style.color="red"; 
          element.val(null); 
-         document.getElementById("enter_name").value = "";
-         document.getElementById("enter_name").disabled = true;
-         document.getElementById("add_link").disabled = true;
          } 
        });
      }
@@ -276,14 +282,12 @@ var outForm = new FormData(form);
     document.getElementById("comment").value = responseJson.outText;
     document.getElementById("comment").style.color = "black";
     document.getElementById("enter_name").value = responseJson.fileName;
-    document.getElementById("enter_name").disabled = false;
     document.getElementById("add_link").disabled = false;
     } else {
     var responseJson = JSON.parse(xhr.responseText);   
     document.getElementById("comment").value = responseJson.outText;
     document.getElementById("comment").style.color = "red";    
     document.getElementById("enter_name").value = "";
-    document.getElementById("enter_name").disabled = true;
     document.getElementById("add_link").disabled = true;
     }
     };
