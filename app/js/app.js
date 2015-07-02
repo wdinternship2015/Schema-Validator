@@ -1,18 +1,8 @@
-var app= angular.module('evaluator', ['ui.bootstrap', 'ngResource']); 
+var app= angular.module('evaluator', ['ui.bootstrap']); 
 
-//retrieves data from the restful service 
-app.factory('UserFactory', function($resource){
-  return $resource('http://localhost:8080/ValidateService/webapi/json/getFile', {},{
-    get:{
-       method:'GET',
-       params: {}, 
-       isArray: false
-     }
-  })
-});
 
  
-app.controller('uploadController',["$scope","UserFactory", "$http", function($scope, UserFactory, $http){
+app.controller('uploadController',["$scope", "$http", function($scope, $http){
   $scope.showInput = function($fileContent){
     $scope.inputContent = $fileContent; 
   }
@@ -29,12 +19,14 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
   $scope.schemaName="";
   $scope.displayInput=true;
   $scope.enter_name="";
-  //sends the multipart form to the server, and receives the text data and puts into the text area 
+  //sends the multipart form to the server, and receives the text data and displays text area 
   $scope.submit = function() {
+    //if no input or schema file, do not send to server and clear text area 
     if($scope.inputFile == null || $scope.schemaFile == null){
       $scope.textArea=""; 
       return; 
     }
+    //create form to send to server
     var formData = new FormData();
     formData.append("schemaFile", $scope.schemaFile);
     formData.append("inputFile", $scope.inputFile);
@@ -44,17 +36,15 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
        data: formData,
        method: 'POST',
        transformResponse: function(data){
-         //$scope.textArea = data;
-         //return JSON.parse(data);
-         //alert(data); 
          return data;
        }, 
        headers : {'Content-Type' : undefined},
      }).success(function (data, status, headers, config) {
-        //alert("success - status(" + status + ")");
         var space = data.indexOf(" ");
         var fileName = data.substring(0, space);
-        var outText = data.substring(space + 1); 
+        var outText = data.substring(space + 1);
+        //display the text response with the correct style   
+        //enable button so user can save response in file and choose a file name 
         $scope.textArea = outText;
         var text = document.querySelector('#comment'); 
         text.style.color="black";
@@ -62,11 +52,11 @@ app.controller('uploadController',["$scope","UserFactory", "$http", function($sc
         $scope.inputName =fileName;
         (document.querySelector('#enter_name')).value=fileName;  
      }).error(function (data, status, headers, config) {
-        //alert("error - status(" + status + ")");
-        //alert("Validation Failed!"); 
         var space = data.indexOf(" ");
         var fileName = data.substring(0, space);
         var outText = data.substring(space + 1);
+        //display the text error response with the correct style
+        //disable button so user cannot save error response
         $scope.textArea = outText;
         var text = document.querySelector('#comment');
         text.style.color="red"; 
@@ -88,6 +78,7 @@ app.directive('onReadFile', function ($parse, $window) {
     restrict: 'A',
     scope: false,
     link: function(scope, element, attrs) {
+       //loads new file everytime element changes 
        var fn = $parse(attrs.onReadFile);    
        element.on('change', function(onChangeEvent) {
            document.getElementById("enter_name").value = "";
@@ -97,12 +88,11 @@ app.directive('onReadFile', function ($parse, $window) {
 	 reader.onload = function(onLoadEvent) {
            scope.$apply(function(){
            fn( scope,{$fileContent: onLoadEvent.target.result}); 
-           //fn(scope, {inputFile: onLoadEvent.target.files[0]}); 
            }); 
        };   
+       //if no file selected disable button for download and clear text and file content area
        if(onChangeEvent.target.files[0] == null){
            document.querySelector('#input').style.display="none";   
-           //console.log("InputContent: " + scope.inputContent); 
            scope.$apply(function(){
              scope.inputFile = null; 
              scope.disable= true;
@@ -111,11 +101,12 @@ app.directive('onReadFile', function ($parse, $window) {
            return;
        } 
        document.querySelector('#input').style.display="block";
-       console.log("Here!");
        scope.displayInput = false; 
        var fileName = onChangeEvent.target.files[0].name;
-       console.log("File Name: " + fileName); 
        scope.inputFileName = fileName; 
+       //check extension of the input file. 
+       //if correct extension, display file contents onto screen 
+       //if incorrect, then display error message onto text area and do not display on screen 
        if(fileName.search("txt") >= 0 || fileName.search("xml") >=0){
     	  var text = document.querySelector('#comment'); 
     	  text.value = "";
@@ -123,17 +114,15 @@ app.directive('onReadFile', function ($parse, $window) {
           scope.inputFile = onChangeEvent.target.files[0];  
           console.log((onChangeEvent.target).files[0].name); 
        } else {
-         //$window.alert("Need txt or xml file!");
          var text = document.querySelector('#comment'); 
          text.value = "Input file needs to be a txt or xml file!";
          text.style.color="red";
          document.querySelector('#input').style.display="none";
-             scope.$apply(function(){
+         scope.$apply(function(){
            scope.inputFile = null; 
            scope.textArea = "Input file needs to be a txt or xml file!!"; 
          });
-
-          element.val(null);   
+         element.val(null);   
        }       
        });
      }
@@ -146,6 +135,7 @@ app.directive('onReadSchema', function ($parse, $window) {
     restrict: 'A',
     scope: false,
     link: function(scope, element, attrs) {
+       //loads new file everytime element changes 
        var fn = $parse(attrs.onReadSchema);
        element.on('change', function(onChangeEvent) {
            document.getElementById("enter_name").value = "";
@@ -157,7 +147,7 @@ app.directive('onReadSchema', function ($parse, $window) {
            fn(scope, {$fileContents:onLoadEvent.target.result});
            });
          };
-         
+         //if no file selected disable button for download and clear text and file content area
          if(onChangeEvent.target.files[0] == null){
              document.querySelector('#schema').style.display="none";
              scope.$apply(function(){
@@ -167,22 +157,23 @@ app.directive('onReadSchema', function ($parse, $window) {
              });
              return;
            }        
-           document.querySelector('#schema').style.display="block";
+         document.querySelector('#schema').style.display="block";
          var fileName = onChangeEvent.target.files[0].name;
          scope.schemaName = fileName; 
+         //check extension of the input file. 
+         //if correct extension, display file contents onto screen 
+         //if incorrect, then display error message onto text area and do not display on screen 
          if(fileName.search("xsd") >= 0){ 
        	  var text = document.querySelector('#comment'); 
     	  text.value = "";
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
-           scope.schemaFile = onChangeEvent.target.files[0]; 
-           console.log((onChangeEvent.target).files[0].name);
+          scope.schemaFile = onChangeEvent.target.files[0]; 
          } else {
-          //$window.alert("Need an xsd file!");
-             document.querySelector('#schema').style.display="none";
+          document.querySelector('#schema').style.display="none";
           var text = document.querySelector('#comment'); 
-         text.value = "Schema File needs to be an xsd file!";
-         text.style.color="red"; 
-         scope.$apply(function(){
+          text.value = "Schema File needs to be an xsd file!";
+          text.style.color="red"; 
+          scope.$apply(function(){
            scope.schemaFile = null; 
            scope.textArea = "Schema File needs to be an xsd file!"; 
          });
@@ -195,101 +186,29 @@ app.directive('onReadSchema', function ($parse, $window) {
 
 
 
-//upload both files to the server wrapped in a form. 
-app.directive('sendFile',function($http){
-  return{
-    restrict: 'A',
-    scope: false, 
-    link:function(scope, element, attrs){
-      element.on('click', function(onClickEvent){
-        console.log(scope.inputFile);
-        console.log(scope.schemaFile);
-        var formData = new FormData();
-        formData.append("schemaFile", scope.schemaFile);
-        formData.append("inputFile", scope.inputFile);
-        formData.append("direction", "text to xml"); 
-        $http.post("http://localhost:8080/ValidateService/webapi/runSchema/byFileName", formData, {
-          transformRequest: angular.identity, 
-          withCredentials: true, 
-          headers: {'Content-type':undefined} 
-        });
-        $http.post('http://localhost:8080/ValidateService/webapi/runSchema/byFileName').success(function(data){
-    $scope.textArea = data; 
-  }); 
-      });
-      
-    }
-  };
-
-
-});
-
 //creates file from text on the text area box and saves file onto user's local file system 
+//only supported by Chrome and Firefox (download field in attribute tag not supported by IE or safari)
 app.directive('downloadFile', function($compile, $window){
   return{
     restrict:'AE',  
     scope: false, 
     link: function(scope, element, attrs){
       var newElement; 
+      //create URL with text data and click on link to download file using download attribute 
       element.on('click', function(onClickEvent) {
-        console.log(scope.textArea);
         var data = new Blob([scope.textArea], {type: 'text/plain'}); 
-        console.log("Blob: " + data); 
         var textFile = $window.URL.createObjectURL(data); 
-        console.log("URL: " + textFile); 
-        console.log("Input: " + scope.inputName); 
         angular.element(document.querySelector('#add_link')).append($compile(
          '<a id=new_elem download="' + scope.inputName + '"'  + 'href="' + textFile + '">' + '</a>')(scope));
-        //$window.location.href = textFile;
         var elem = document.querySelector('#new_elem'); 
          elem.click();
          delete elem;
          var elem2 = document.querySelector('#new_elem');
          elem2.remove();  
-         //elem.remove(); 
-         //elem.remove(); 
-         //$(".save").remove(); 
-         //elem.remove();
-         //element.removeAttr('new_elem'); 
-        //elem.removeAttr("href"); 
-        //$window.URL.revokeObjectURL(textFile);   
      });  
-      
-      
      }
- 
   }
-
 });
-
-//checks the direction of the input file. 
-/*app.directive('checkDirection', function(){
-  return{
-    restrict: 'A',
-    scope: false, 
-    link: function(scope, element, attrs){
-      var input = scope.inputFileName; 
-      var schema = scope.schemaName;
-      var dir = scope.direction;
-      var selectInput= dir.substr(0,4); 
-      var selectOutput = dir.slice(-4); 
-      console.log(dir);  
-      var inputExt = input.substr(input.indexOf(".") + 1); 
-      var schemaExt = schema.substr(schema.indexOf(".") + 1); 
-      if(inputExt == "txt" && selectInput != "TEXT"){
-        alert("Invalid Direction");
-      }  else if(inputExt == "csv" && selectInput !="CSV "){
-        alert("Invalid Direction");
-      } else if(inputExt == "xml" && selectInput !="XML "){
-        alert("Invalid Direction");
-      } else {
-        console.log("Valid"); 
-     }       
-    };
-  }; 
-
-});*/
-
 
 
 
