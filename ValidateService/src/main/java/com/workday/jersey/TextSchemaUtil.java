@@ -8,7 +8,14 @@ import java.io.StringWriter;
 import com.capeclear.serialization.textschema.TextSchemaException;
 import com.capeclear.serialization.textschema.TextSchemaProcessor;
 
-
+/**
+ * TextSchemaProcessor class and method wrapper
+ * 
+ * @author Elisa Yan
+ * @author Britney Wong
+ * 
+ * @since 7.1.2015
+ */
 public class TextSchemaUtil {
 	//private String encoding = "Base64";
 	/**

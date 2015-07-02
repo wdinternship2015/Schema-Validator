@@ -11,10 +11,22 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-
+/**
+ * Test response for confirming correct CORS configuration
+ * 
+ * @author Elisa Yan
+ * @author Britney Wong
+ * 
+ * @since 7.1.2015
+ */
 @Path("testResponse")
 public class testResponse {
 
+	/**
+	 * Acknowledge POST request
+	 * @param id  not used
+	 * @return response with test message string
+	 */
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/POST")
@@ -34,6 +46,11 @@ public class testResponse {
 	
 	}
 	
+	/**
+	 * Acknowledge GET request
+	 * @param id  not used
+	 * @return response with test message string
+	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/GET")

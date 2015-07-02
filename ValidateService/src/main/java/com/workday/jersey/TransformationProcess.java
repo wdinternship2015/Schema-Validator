@@ -7,8 +7,10 @@ import com.capeclear.serialization.textschema.TextSchemaProcessor;
 
 /**
  * Class with static methods for schema transformation
- * @author elisa.yan
- *
+ * @author Elisa Yan
+ * @author Britney Wong
+ * 
+ * @since 7.1.2015
  */
 public class TransformationProcess {
 

@@ -23,7 +23,21 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 
+/**
+ * Class containing public static method to format xml string with appropriate white spaces
+ * 
+ * @author Elisa Yan
+ * @author Britney Wong
+ * 
+ * @since 7.1.2015
+ */
 public class PrettyPrintXML {
+	
+	/**
+	 * Formats input xml string by inserting white spaces
+	 * @param xml input xml string
+	 * @return formatted xml string
+	 */
 	public static String formatXML(String xml) {
 		try {
 			Document document = DocumentBuilderFactory
