@@ -40,7 +40,8 @@ app.controller('uploadController',["$scope", "$http", function($scope, $http){
        }, 
        headers : {'Content-Type' : undefined},
      }).success(function (data, status, headers, config) {
-        var space = data.indexOf(" ");
+    	var extIndex = data.indexOf(".");
+        var space = data.indexOf(" ", extIndex);
         var fileName = data.substring(0, space);
         var outText = data.substring(space + 1);
         //display the text response with the correct style   
@@ -52,20 +53,22 @@ app.controller('uploadController',["$scope", "$http", function($scope, $http){
         $scope.inputName =fileName;
         (document.querySelector('#enter_name')).value=fileName;  
      }).error(function (data, status, headers, config) {
-        var space = data.indexOf(" ");
+    	var extIndex = data.indexOf(".");
+        var space = data.indexOf(" ", extIndex);
         var fileName = data.substring(0, space);
         var outText = data.substring(space + 1);
+        alert(data + "\n msg \n" + outText);
         //display the text error response with the correct style
         //disable button so user cannot save error response
         $scope.textArea = outText;
         var text = document.querySelector('#comment');
         text.style.color="red"; 
-        $scope.disable = true;
-        (document.querySelector('#enter_name')).value="";        
-        $scope.inputName="";
-        document.getElementById("enter_name").value = "";
-        document.getElementById("enter_name").disabled = true;
-        document.getElementById("add_link").disabled = true;
+        $scope.disable = false;
+        $scope.inputName =fileName;
+        (document.querySelector('#enter_name')).value=fileName;  
+//        document.getElementById("enter_name").value = "";
+//        document.getElementById("enter_name").disabled = true;
+//        document.getElementById("add_link").disabled = true;
  
      });
    }
@@ -82,10 +85,9 @@ app.directive('onReadFile', function ($parse, $window) {
        var fn = $parse(attrs.onReadFile);    
        element.on('change', function(onChangeEvent) {
            document.getElementById("enter_name").value = "";
-           document.getElementById("enter_name").disabled = true;
-           document.getElementById("add_link").disabled = true;
-         var reader = new FileReader();       
-	 reader.onload = function(onLoadEvent) {
+           scope.disable= true;
+           var reader = new FileReader();       
+           reader.onload = function(onLoadEvent) {
            scope.$apply(function(){
            fn( scope,{$fileContent: onLoadEvent.target.result}); 
            }); 
@@ -93,11 +95,6 @@ app.directive('onReadFile', function ($parse, $window) {
        //if no file selected disable button for download and clear text and file content area
        if(onChangeEvent.target.files[0] == null){
            document.querySelector('#input').style.display="none";   
-           scope.$apply(function(){
-             scope.inputFile = null; 
-             scope.disable= true;
-             scope.textArea=""; 
-           });  
            return;
        } 
        document.querySelector('#input').style.display="block";
@@ -139,8 +136,7 @@ app.directive('onReadSchema', function ($parse, $window) {
        var fn = $parse(attrs.onReadSchema);
        element.on('change', function(onChangeEvent) {
            document.getElementById("enter_name").value = "";
-           document.getElementById("enter_name").disabled = true;
-           document.getElementById("add_link").disabled = true;
+           scope.disable= true;
          var reader = new FileReader();
          reader.onload = function(onLoadEvent) {
            scope.$apply(function() {
@@ -150,11 +146,6 @@ app.directive('onReadSchema', function ($parse, $window) {
          //if no file selected disable button for download and clear text and file content area
          if(onChangeEvent.target.files[0] == null){
              document.querySelector('#schema').style.display="none";
-             scope.$apply(function(){
-               scope.disable= true;
-               scope.textArea = "";
-               scope.schemaFile = null;
-             });
              return;
            }        
          document.querySelector('#schema').style.display="block";
