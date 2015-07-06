@@ -235,18 +235,11 @@ var outForm = new FormData(form);
 
 app.controller('ModalCtrl', function($scope, $modal, $log){
 	   //$scope.items = ['Instruction 1', 'Instruction 2', 'Instruction 3']; 
-	   $scope.open = function(size){
+	   $scope.open = function(){
 	   $scope.$modalInstance = $modal.open({
 	      scope:$scope,
-	      //animation: $scope.animationsEnabled,
 	      templateUrl: 'myModalContent.html',
-	      controller: 'ModalCtrl',
-	      size: size
-	      /*resolve: {
-	        items: function () {
-	          return $scope.items;
-	        }
-	      }*/
+	      controller: 'ModalCtrl'
 	    });
 	      $scope.$modalInstance.result.then(function (selectedItem) {
 	      //$scope.selected = selectedItem;
@@ -257,8 +250,13 @@ app.controller('ModalCtrl', function($scope, $modal, $log){
 	   $scope.ok = function(){
 	     $scope.$modalInstance.close();
 	   };
-	   $scope.cancel = function(){
-	     $scope.$modalInstance.dismiss('cancel');
-	   };
+          $scope.onLoad = function(){
+           $scope.$modalInstance = $modal.open({
+              scope:$scope,
+              templateUrl: 'myModalContent.html',
+              controller: 'ModalCtrl'
+            }); 
+          };
+         
 	});
 
