@@ -48,24 +48,26 @@ app.controller('uploadController',["$scope", "$http", function($scope, $http){
         //enable button so user can save response in file and choose a file name 
         $scope.textArea = outText;
         var text = document.querySelector('#comment'); 
+        text.value = outText;
         text.style.color="black";
         $scope.disable = false;
         $scope.inputName =fileName;
-        (document.querySelector('#enter_name')).value=fileName;  
+//        (document.querySelector('#enter_name')).value=fileName;  
      }).error(function (data, status, headers, config) {
     	var extIndex = data.indexOf(".");
         var space = data.indexOf(" ", extIndex);
         var fileName = data.substring(0, space);
         var outText = data.substring(space + 1);
-        alert(data + "\n msg \n" + outText);
+
         //display the text error response with the correct style
         //disable button so user cannot save error response
         $scope.textArea = outText;
         var text = document.querySelector('#comment');
+        text.value = outText;
         text.style.color="red"; 
         $scope.disable = false;
         $scope.inputName =fileName;
-        (document.querySelector('#enter_name')).value=fileName;  
+//        (document.querySelector('#enter_name')).value=fileName;  
 //        document.getElementById("enter_name").value = "";
 //        document.getElementById("enter_name").disabled = true;
 //        document.getElementById("add_link").disabled = true;
