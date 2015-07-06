@@ -1,5 +1,43 @@
 var app= angular.module('evaluator', ['ui.bootstrap']); 
 
+app.controller('ModalCtrl', function($scope, $modal, $log){
+   //$scope.items = ['Instruction 1', 'Instruction 2', 'Instruction 3']; 
+   $scope.open = function(size){
+   $scope.$modalInstance = $modal.open({
+      scope:$scope,
+      //animation: $scope.animationsEnabled,
+      templateUrl: 'myModalContent.html',
+      controller: 'ModalCtrl',
+      size: size
+      /*resolve: {
+        items: function () {
+          return $scope.items;
+        }
+      }*/
+    });
+      $scope.$modalInstance.result.then(function (selectedItem) {
+      //$scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+   $scope.ok = function(){
+     $scope.$modalInstance.close();
+   };
+   $scope.cancel = function(){
+     $scope.$modalInstance.dismiss('cancel');
+   };
+
+
+
+});
+
+
+
+
+
+
+
 
  
 app.controller('uploadController',["$scope", "$http", function($scope, $http){
@@ -9,6 +47,7 @@ app.controller('uploadController',["$scope", "$http", function($scope, $http){
   $scope.showSchema= function($fileContents){
     $scope.schemaContent = $fileContents; 
   };
+  $scope.items = [{value:"TXT to XML", option:'TXT to XML'}, {value:"CSV to XML", option:'CSV to XML'}, {value: "XML to TXT", option:'XML to TXT'}]; 
   $scope.inputFile; 
   $scope.schemaFile; 
   $scope.inputName ="";
@@ -62,8 +101,15 @@ app.controller('uploadController',["$scope", "$http", function($scope, $http){
         //display the text error response with the correct style
         //disable button so user cannot save error response
         $scope.textArea = outText;
+        //alert("Out text(" + outText + ")"); 
+        //alert("Text Area(" + $scope.textArea + ")");  
         var text = document.querySelector('#comment');
+<<<<<<< Updated upstream
         text.value = outText;
+=======
+        text.value = outText; 
+        //alert("Text Area(" + text.value + ")");
+>>>>>>> Stashed changes
         text.style.color="red"; 
         $scope.disable = false;
         $scope.inputName =fileName;
@@ -233,4 +279,20 @@ var outForm = new FormData(form);
     xhr.send(outForm);
 }
 
+app.directive('selectpicker', function()
+{
+  return {
+      restrict: 'E',
+      scope: {
+          array: '=',
+          model: '=',
+          class: '='
+      },
+      template: '<select class="selectpicker" ng-model="model" ng-options="o.value as o.option for o in array"></select>',
+      replace: true,
+      link: function(scope, element, attrs) {
+          $(element).selectpicker();
+      }
+  }
+});
 

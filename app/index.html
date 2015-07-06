@@ -2,12 +2,15 @@
 <html ng-app="evaluator" style="background-color:#4FA5C9; padding-left: 1em; padding-right: 1em; padding-bottom: 1em;">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/> 
   <link rel="stylesheet" type="text/css" href="css/example.css"/>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css"/>
   <head>
   </head>
+  <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
   <script type="text/javascript" src="js/angular.min.js"></script>
   <script type="text/javascript" src="js/angular-resource.js"></script> 
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
+<<<<<<< Updated upstream
 
 <div id="topBanner" style="background-color:#4FA5C9; padding-left: 5em;">
 	<object type="image/svg+xml" data="images/workdayLogo.svg"></object>
@@ -64,4 +67,103 @@
 		</div>
 	</form>
 </div>
+=======
+  <script type="text/javascript" src="js/bootstrap-select.js"></script> 
+  <script type="text/javascript" src="js/angular-bootstrap-select.js"></script>
+  <div ng-controller="ModalCtrl">
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Instructions</h3>
+        </div>
+        <div class="modal-body">
+          <h4 style="font-size:12px">1. Click the Choose File button  and select the desired input and  schema file </h4>
+          <h5 style="font-size:12px">2. Select the correct direction based on the type of input file selected  </h5> 
+          <h6 style="font-size:12px">3. Click Run Schema button </h6> 
+          <h7 style="font-size:12px">4. Save output from text box if no errors occurred. If errors occurred, text will appear in red.  </h7>  
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+    <button class="btn btn-danger" ng-click="open()">Help!</button>
+    </div>
+  <div class="container-fluid" ng-app="evaluator" ng-controller="uploadController">  
+  <form name="validationForm" method="post" enctype="multipart/form-data">
+  <div class="row con">
+    <div class="col-sm-6 scrollit" > 
+      <h3> Input File </h3> 
+      <input type="file" on-read-file="showInput($fileContent)"  name="inputFile" required></input> 
+      <!--<div class="ifile" ng-if="inputContent "> -->
+      <div class="ifile"  id="input" style="display:none" > 
+         <!--<span id="input" ng-if="inputContent"  style="display:block"> {{inputContent}} </span> --> 
+         <pre>{{inputContent}} </pre>  
+      </div>
+     </div>
+    <div class="col-sm-6 scrollit">
+      <h3> Schema File </h3> 
+      <input type="file" id=file2 on-read-schema="showSchema($fileContents)" name="schemaFile" required></input> 
+       <!--<div class="sfile" ng-if="schemaContent"> -->
+        <div class="sfile" id="schema" style="display:none">
+        <pre> {{schemaContent}} </pre>
+      </div> 
+    </div> 
+   </div> 
+  <div class="row">
+    <div class="col-sm-12 result">
+      <div class "btn-group" style="margin:10px" dropdown>
+        <select ng-model="direction" name="direction" required>
+          <option ng-selected="true" value="TXT To XML">TXT to XML</option>
+	  <option value="CSV To XML">CSV to XML</option>
+	  <option value="XML To TXT">XML to TXT</option>
+        </select>
+       <button type="submit" class="btn btn-warning"  ng-click="submit()">Run Schema</button>   
+    </div>
+    <div class="form-group">
+      <label for="output">Output: </label> 
+      <textarea class="form-control"  rows="12" id="comment"  style="overflow-y:scroll" ng-model="textArea"></textarea> 
+      <div class="pull-right">
+      <input id="enter_name" ng-model="inputName" ng-disabled="disable" maxLength="50" size="50"> </input>
+      <button type="button" class="btn btn-warning" style="margin:10px"  id="add_link" ng-disabled="disable" download-file> Save As  </button>      
+      </div> 
+    </div> 
+  </div>
+  </div>
+  </form>
+  </div>
+ <!--<body ng-controller="uploadController">
+    <div class="container">
+    <h1> Input File </h1>  
+    <input type="file" id=file1  on-read-file="showInput($fileContent)"> </input>
+    <div ng-if="inputContent">
+    <p> {{inputContent}} </p>
+    </div>
+    </div> 
+    <div class="panel panel-default">
+    <h2> Schema File </h2>
+    <input type="file" id=file2 on-read-schema="showSchema($fileContents)"></input> 
+    <div ng-if="schemaContent">
+    <p> {{schemaContent}} </p> 
+    </div> 
+    </div> 
+    <div class= "boxed3">
+      <textarea  Name="content" ROWS= 20 COLS=233 ng-model="textArea"></textarea> 
+      <input id =add_link type="button"  value="Download File" download-file>  </input>
+      <div id="add_link2"></div> 
+    <div class="container-fluid">
+      <div class="row"> 
+        <div class="col-lg-6"> 
+           Container Left 
+        </div> 
+     <div class="col-lg-6"> 
+         Container Right
+      </div>
+      </div>
+    </div>
+    <textarea autocomplete="off" class="container" id="textareaCode" wrap="logical" spellcheck="false">         
+       
+  </div> 
+  </body> 
+<-->  
+>>>>>>> Stashed changes
 </html>
