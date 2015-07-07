@@ -44,6 +44,7 @@ app.controller('uploadController',["$scope", "$http", function($scope, $http){
         var space = data.indexOf(" ", extIndex);
         var fileName = data.substring(0, space);
         var outText = data.substring(space + 1);
+        alert(fileName + "\n" + outText);
         //display the text response with the correct style   
         //enable button so user can save response in file and choose a file name 
         $scope.textArea = outText;
@@ -67,11 +68,6 @@ app.controller('uploadController',["$scope", "$http", function($scope, $http){
         text.style.color="red"; 
         $scope.disable = false;
         $scope.inputName =fileName;
-//        (document.querySelector('#enter_name')).value=fileName;  
-//        document.getElementById("enter_name").value = "";
-//        document.getElementById("enter_name").disabled = true;
-//        document.getElementById("add_link").disabled = true;
- 
      });
    }
 }]);
@@ -86,6 +82,8 @@ app.directive('onReadFile', function ($parse, $window) {
        //loads new file everytime element changes 
        var fn = $parse(attrs.onReadFile);    
        element.on('change', function(onChangeEvent) {
+        	  var text = document.querySelector('#comment'); 
+        	  text.value = "";
            document.getElementById("enter_name").value = "";
            scope.disable= true;
            var reader = new FileReader();       
@@ -139,6 +137,8 @@ app.directive('onReadSchema', function ($parse, $window) {
        element.on('change', function(onChangeEvent) {
            document.getElementById("enter_name").value = "";
            scope.disable= true;
+     	  var text = document.querySelector('#comment'); 
+    	  text.value = "";
          var reader = new FileReader();
          reader.onload = function(onLoadEvent) {
            scope.$apply(function() {
@@ -210,27 +210,23 @@ var form = document.forms.namedItem("validationForm");
 var outForm = new FormData(form);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://localhost:8080/ValidateService/webapi/runSchema/byFileName', true);
-    xhr.onload = function() {
-    if (xhr.status == 200) {
-    var responseJson = JSON.parse(xhr.responseText);
-    document.getElementById("comment").value = responseJson.outText;
-    document.getElementById("comment").style.color = "black";
-    document.getElementById("enter_name").value = responseJson.fileName;
-    document.getElementById("enter_name").disabled = false;
-    document.getElementById("add_link").disabled = false;
-    } else {
-    var responseJson = JSON.parse(xhr.responseText);   
-    document.getElementById("comment").value = responseJson.outText;
-    document.getElementById("comment").style.color = "red";    
-    document.getElementById("enter_name").value = "";
-    document.getElementById("enter_name").disabled = true;
-    document.getElementById("add_link").disabled = true;
-    }
-    };
-    xhr.onerror = function() {
-        alert('Woops, there was an error making the request.');
-    };
-    xhr.send(outForm);
+	    xhr.onload = function() {
+			if (xhr.status == 200) {
+				document.getElementById("comment").style.color = "black";
+			} else {
+				var responseJson = JSON.parse(xhr.responseText);
+				document.getElementById("comment").style.color = "red";
+			}
+			var responseJson = JSON.parse(xhr.responseText);
+			document.getElementById("comment").value = responseJson.outText;
+			document.getElementById("enter_name").value = responseJson.fileName;
+			document.getElementById("enter_name").disabled = false;
+			document.getElementById("add_link").disabled = false;
+	};
+	xhr.onerror = function() {
+		alert('Unable to make the request.');
+	};
+	xhr.send(outForm);
 }
 
 app.controller('ModalCtrl', function($scope, $modal, $log){
