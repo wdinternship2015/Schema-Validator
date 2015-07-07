@@ -50,7 +50,7 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http", fu
         text.style.color="black";
         $scope.disable = false;
         $scope.inputName =fileName;
-//        (document.querySelector('#enter_name')).value=fileName;  
+        (document.querySelector('#enter_name')).value=fileName;  
      }).error(function (data, status, headers, config) {
         var extIndex = data.indexOf(".");
         var space = data.indexOf(" ", extIndex);
@@ -65,6 +65,7 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http", fu
         text.style.color="red";
         $scope.disable = false;
         $scope.inputName =fileName;
+        (document.querySelector('#enter_name')).value=fileName;  
      });
    }
 }]);
