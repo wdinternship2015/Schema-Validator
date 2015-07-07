@@ -49,7 +49,7 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http", fu
         text.value = outText;
         text.style.color="black";
         $scope.disable = false;
-        $scope.inputName =fileName;
+        $scope.inputName = "fileName";
         (document.querySelector('#enter_name')).value=fileName;  
      }).error(function (data, status, headers, config) {
         var extIndex = data.indexOf(".");
