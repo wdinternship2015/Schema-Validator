@@ -1,17 +1,14 @@
 package com.workday.jersey;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+
 import java.io.StringWriter;
 
 import javax.management.RuntimeErrorException;
-import javax.xml.parsers.DocumentBuilder;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -25,9 +22,6 @@ import org.xml.sax.InputSource;
 
 /**
  * Class containing public static method to format xml string with appropriate white spaces
- * 
- * @author Elisa Yan
- * @author Britney Wong
  * 
  * @since 7.1.2015
  */
@@ -72,7 +66,7 @@ public class PrettyPrintXML {
 
 			return stringWriter.toString();
 		} catch (Exception e) {
-			throw new RuntimeErrorException(new Error(e.getMessage()));
+			throw new RuntimeErrorException(new Error("Formatting xml string failed."));
 		}
 	}
 }

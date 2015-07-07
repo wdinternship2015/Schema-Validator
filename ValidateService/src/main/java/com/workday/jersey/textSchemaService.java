@@ -1,7 +1,7 @@
 package com.workday.jersey;
 
 import java.io.InputStream;
-import java.util.List;
+
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
  
 /**
@@ -55,7 +55,7 @@ public class textSchemaService {
 	public Response processByFileName(FormDataMultiPart formParams) {
 	    String output = null;
 		int statusInt;
-		String outputFileName = "";
+		String outputFileName = "plain";
 		String outputString;
 		ResponseBuilder response;
 		
@@ -81,14 +81,17 @@ public class textSchemaService {
 				} else {
 					statusInt = CLIENT_FAIL;
 					outputString = "Invalid direction";
+					outputFileName = getErrorFileName(inputFileName, direction);
 				}
 			} catch (Exception ex){
 				statusInt = SERVER_ERROR;
 				outputString = ex.getMessage();
+				outputFileName = getErrorFileName(inputFileName, direction);
 			}
 		} else {
 			statusInt = CLIENT_FAIL;
 			outputString = "Invalid direction.  \nInput file type does not match transformation direction.";
+			outputFileName = getErrorFileName(inputFileName, direction);
 		}
 		output = ResponseMessageUtil.buildResponseString(outputFileName, outputString);
 		response = Response.status(statusInt).entity(output);
@@ -135,5 +138,19 @@ public class textSchemaService {
 			return inputFileName.substring(0, i-1) + "_XMLToText.txt";
 		}
 		return "null";
+	}
+	
+	/**
+	 * Private helper method generating suggested file name for error message
+	 * @param inputFileName file name of the input file upload to server
+	 * @param direction transformation direction upload to server
+	 * @return suggested file name for error message inputFileName_direction_error.resultExtension, or "null" if inputFileName is empty
+	 */
+	private String getErrorFileName(String inputFileName, String direction) {
+		if (inputFileName.length()<=0) {
+			return "null";
+		}
+		int i = inputFileName.indexOf(".");
+		return inputFileName.substring(0, i-1) + "_" + direction.replaceAll("\\s","") + "_error.txt";
 	}
 }
