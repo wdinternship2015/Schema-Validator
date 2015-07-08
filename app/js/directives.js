@@ -9,9 +9,9 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
        var fn = $parse(attrs.onReadFile);
        element.on('change', function(onChangeEvent) {
                   var text = document.querySelector('#comment');
-                  text.value = "";
-           document.getElementById("enter_name").value = "";
+                  text.value = "";           
            scope.disable= true;
+           scope.inputName = "";
            var reader = new FileReader();
            reader.onload = function(onLoadEvent) {
            scope.$apply(function(){
@@ -24,6 +24,7 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
              scope.inputFile = null;
              scope.textArea = "";
            });
+//           alert("#inputFile value " + document.getElementById("inputFile").value); 
            document.querySelector('#input').style.display="none";
            return;
        }
@@ -40,17 +41,19 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.inputFile = onChangeEvent.target.files[0];
           console.log((onChangeEvent.target).files[0].name);
+//          alert("#inputFile value " + document.getElementById("inputFile").value); 
        } else {
          var text = document.querySelector('#comment');
          text.value = "Input file needs to be a txt or xml file!";
          text.style.color="red";
          document.querySelector('#input').style.display="none";
          scope.$apply(function(){
-           console.log("SHould be nUll");
+           console.log("Should be null");
            scope.inputFile = null;
            scope.textArea = "Input file needs to be a txt or xml file!!";
          });
          element.val(null);
+//         alert("#inputFile value " + document.getElementById("inputFile").value); 
        }
        });
      }
@@ -67,8 +70,9 @@ angular.module('evaluator').directive('onReadSchema', function ($parse, $window)
        //loads new file everytime element changes 
        var fn = $parse(attrs.onReadSchema);
        element.on('change', function(onChangeEvent) {
-           document.getElementById("enter_name").value = "";
+           
            scope.disable= true;
+           scope.inputName = "";
           var text = document.querySelector('#comment');
           text.value = "";
          var reader = new FileReader();
