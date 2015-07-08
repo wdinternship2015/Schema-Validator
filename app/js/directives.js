@@ -8,8 +8,7 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
        //loads new file everytime element changes 
        var fn = $parse(attrs.onReadFile);
        element.on('change', function(onChangeEvent) {
-                  var text = document.querySelector('#comment');
-                  text.value = "";           
+           scope.textArea = "";
            scope.disable= true;
            scope.inputName = "";
            var reader = new FileReader();
@@ -24,7 +23,6 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
              scope.inputFile = null;
              scope.textArea = "";
            });
-//           alert("#inputFile value " + document.getElementById("inputFile").value); 
            document.querySelector('#input').style.display="none";
            return;
        }
@@ -41,7 +39,6 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.inputFile = onChangeEvent.target.files[0];
           console.log((onChangeEvent.target).files[0].name);
-//          alert("#inputFile value " + document.getElementById("inputFile").value); 
        } else {
          var text = document.querySelector('#comment');
          text.value = "Input file needs to be a txt or xml file!";
@@ -53,7 +50,6 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
            scope.textArea = "Input file needs to be a txt or xml file!!";
          });
          element.val(null);
-//         alert("#inputFile value " + document.getElementById("inputFile").value); 
        }
        });
      }
