@@ -11,6 +11,7 @@
   <script type="text/javascript" src="js/modalCtrl.js"></script>
   <script type="text/javascript" src="js/directives.js"></script> 
   <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-mocks/angular-mocks.js"></script>
 
 <div id="topBanner" style="background-color:#4FA5C9; padding-left: 5em" ng-init="onLoad()" ng-controller="ModalCtrl">
 
@@ -29,7 +30,7 @@
           <h8 style="font-size:12px">&nbsp;&nbsp;&nbsp;&nbsp;*Click <button class="btn-xs btn-danger" disabled>Help!</button> to view instructions.  </h8> 
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-primary" id="modalOK" ng-click="ok()">OK</button>
         </div>
     </script>
     <button class="btn-xs btn-danger pull-right" ng-click="open()" title="Usage Instructions">Help!</button>
@@ -42,7 +43,7 @@
 			<div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
 				<h4>Input File</h4>
 				<input type="file" on-read-file="showInput($fileContent)"
-					name="inputFile" title="Text or XML input file" required></input>
+					id="inputFile" name="inputFile" title="Text or XML input file" required></input>
 				<!--<div class="ifile" ng-if="inputContent "> -->
 				<div class="ifile" id="input" style="display: none">
 					<!--<span id="input" ng-if="inputContent"  style="display:block"> {{inputContent}} </span>  -->
@@ -53,7 +54,7 @@
 			</div>
 			<div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
 				<h4>Schema File</h4>
-				<input type="file" id=file2
+				<input type="file" id="schemaFile"
 					on-read-schema="showSchema($fileContents)" name="schemaFile" title="Schema XSD file" required></input>
 				<!--<div class="sfile" ng-if="schemaContent"> -->
 				<div class="sfile" id="schema" style="display: none">
@@ -64,12 +65,12 @@
 		<div class="row">
 			<div class="col-sm-12 result" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
 				<div class "btn-group" style="margin: 10px" dropdown>
-					<select ng-model="direction" name="direction" title="Transformation direction" required>
+					<select ng-model="direction" id="direction" name="direction" title="Transformation direction" required>
 						<option ng-selected="true" value="TXT To XML">TXT to XML</option>
 			<!-- 			<option value="CSV To XML">CSV to XML</option>   -->
 						<option value="XML To TXT">XML to TXT</option>
 					</select>
-					<button type="submit" class="btn btn-warning" ng-click="submit()" title="Run input file again schema">Run Schema</button>
+					<button type="submit" class="btn btn-warning" id="submitForm" ng-click="submit()" title="Run input file again schema">Run Schema</button>
 				</div>
 				<div class="form-group">
 					<label for="output">Output: </label>
