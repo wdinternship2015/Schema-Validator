@@ -43,14 +43,17 @@ public class TextSchemaUtil {
 	static public String textToXMLString(TextSchemaProcessor processor, InputStream textIs) throws Exception {
 		 // translate text input file to XML string
 	      StringWriter xmlOut = new StringWriter();
+	      Reader textIn = null;
 	      try{
-		      Reader textIn = new InputStreamReader(textIs);
+		      textIn = new InputStreamReader(textIs);
 		      processor.textToXml( textIn, xmlOut );
 		      textIn.close();		      
 	      } catch (Exception ex) {
 	    	  ex.printStackTrace();
 	    	  throw new Exception("Text conversion to XML failed.    \n" + ex.getMessage());
-	      } 
+	      } finally {
+	    	  textIn.close();
+	      }
 	      String xmlString = xmlOut.toString();
 		      return xmlString;	      
 	}
@@ -65,14 +68,17 @@ public class TextSchemaUtil {
 	static public String xmlToTextString(TextSchemaProcessor processor, InputStream xmlIs) throws Exception {
 		 // translate text input file to XML string
 	      StringWriter textOut = new StringWriter();
+	      Reader xmlIn = null;
 	      try{
-		      Reader xmlIn = new InputStreamReader(xmlIs);
+		      xmlIn = new InputStreamReader(xmlIs);
 		      processor.xmlToText(xmlIn, textOut);
 		      textOut.close();		      
 	      } catch (Exception ex) {
 	    	  ex.printStackTrace();
 	    	  throw new Exception("XML conversion to text failed. \n" + ex.getMessage());
-	      } 
+	      } finally {
+	    	  xmlIn.close();
+	      }
 	      String textString = textOut.toString();
 		      return textString;	      
 	}

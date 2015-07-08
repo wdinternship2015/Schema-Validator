@@ -37,25 +37,22 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
  */
 @Path("/runSchema")
 public class textSchemaService {
-	int SUCCESS = 200;
-	int CLIENT_FAIL = 400;
-	int SERVER_ERROR = 500;
-	String TEXT_TO_XML = "txt to xml";
-	String XML_TO_TEXT = "xml to txt";
+	final int SUCCESS = 200;
+	final int CLIENT_FAIL = 400;
+	final int SERVER_ERROR = 500;
+	final String TEXT_TO_XML = "txt to xml";
+	final String XML_TO_TEXT = "xml to txt";
 		
 	/**
 	 * Processes input and schema processing requests
 	 * @param formParams FormDataMultipart object in the Request body
-	 * @return Response with String body in the form of "fileName result"
+	 * @return Response with result as a formatted string
 	 */
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)    
 	@Produces(MediaType.TEXT_PLAIN)
-	@Path("/byFileName")
 	public Response processByFileName(FormDataMultiPart formParams) {
-	    String output = null;
 		int statusInt;
-		String outputFileName = "plain";
 		String outputString;
 		ResponseBuilder response;
 		
@@ -71,30 +68,24 @@ public class textSchemaService {
 					statusInt = CLIENT_FAIL;
 					outputString = "Can't process input parameters";
 				} else if (direction.equalsIgnoreCase(TEXT_TO_XML)) {
+					statusInt = SUCCESS;
 					outputString = TransformationProcess.txtToXML(inputIs, schemaIs);
-					statusInt = SUCCESS;
-					outputFileName = getOutputFileName(inputFileName, direction);
 				} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
-					outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
 					statusInt = SUCCESS;
-					outputFileName = getOutputFileName(inputFileName, direction);
+					outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
 				} else {
 					statusInt = CLIENT_FAIL;
 					outputString = "Invalid direction";
-					outputFileName = getErrorFileName(inputFileName, direction);
 				}
 			} catch (Exception ex){
 				statusInt = SERVER_ERROR;
 				outputString = ex.getMessage();
-				outputFileName = getErrorFileName(inputFileName, direction);
 			}
 		} else {
 			statusInt = CLIENT_FAIL;
 			outputString = "Invalid direction.  \nInput file type does not match transformation direction.";
-			outputFileName = getErrorFileName(inputFileName, direction);
 		}
-		output = ResponseMessageUtil.buildResponseString(outputFileName, outputString);
-		response = Response.status(statusInt).entity(output);
+		response = Response.status(statusInt).entity(outputString);
 		
 		//CORS HttpResponse header
 		response.header("Access-Control-Allow-Origin", "*");
@@ -114,43 +105,12 @@ public class textSchemaService {
 	 * @return true if input file extension is consistent with transformation direction, false otherwise
 	 */
 	private boolean isDirectionValid(String inputFileName, String direction) {
-		int i = inputFileName.indexOf(".");
-		String extention = inputFileName.substring(i+1);
-		int j = direction.indexOf(" ");
-		String directionInputParamType = direction.substring(0,  j);
-		return extention.equalsIgnoreCase(directionInputParamType);		
-	}
-	
-	/**
-	 * Private helper method generating suggested file name 
-	 * @param inputFileName file name of the input file upload to server
-	 * @param direction transformation direction upload to server
-	 * @return suggested file name for result inputFileName_direction.resultExtension, or "null" if inputFileName is empty
-	 */
-	private String getOutputFileName(String inputFileName, String direction) {
-		if (inputFileName.length()<=0) {
-			return "null";
-		}
-		int i = inputFileName.indexOf(".");
-		if (direction.equalsIgnoreCase(TEXT_TO_XML))  {
-			return inputFileName.substring(0, i-1) + "_TextToXML.xml";
+		if (direction.equalsIgnoreCase(TEXT_TO_XML)){
+			return inputFileName.contains(".txt");
 		} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
-			return inputFileName.substring(0, i-1) + "_XMLToText.txt";
+			return inputFileName.contains(".xml");
 		}
-		return "null";
+		return false;
 	}
 	
-	/**
-	 * Private helper method generating suggested file name for error message
-	 * @param inputFileName file name of the input file upload to server
-	 * @param direction transformation direction upload to server
-	 * @return suggested file name for error message inputFileName_direction_error.resultExtension, or "null" if inputFileName is empty
-	 */
-	private String getErrorFileName(String inputFileName, String direction) {
-		if (inputFileName.length()<=0) {
-			return "null";
-		}
-		int i = inputFileName.indexOf(".");
-		return inputFileName.substring(0, i-1) + "_" + direction.replaceAll("\\s","") + "_error.txt";
-	}
 }

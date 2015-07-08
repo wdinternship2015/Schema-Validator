@@ -28,10 +28,10 @@ public class testResponse {
 	 * @return response with test message string
 	 */
 	@POST
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/POST")
 	public Response testPOST(@PathParam("id") String id) {
-		String serverReturnText = "test PUT";
+		String serverReturnText = "{\"fileName\" : \"madeup.FileName.ext\", \"text\" : \"server \\n message\"}";
 		ResponseBuilder response=Response.status(200).entity(serverReturnText);
 		//Below three lines are necessary when you cross domain rest urls in the application. //For example,, if web app and rest server deployed in two different servers. For more
 		
@@ -41,11 +41,37 @@ public class testResponse {
 		response.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
 		
 		//End of Header
-		
+
 		return response.build();
 	
 	}
 	
+	/**
+	 * Acknowledge POST request
+	 * @param id  not used
+	 * @return response with test message string
+	 */
+	@POST
+	@Produces(MediaType.APPLICATION_XML)
+	@Path("/POSTxml")
+	public Response testPOSTxml(@PathParam("id") String id) {
+		String serverReturnText = "<output>\n"+
+	                              
+				                  "<data><xml>a</xml>\n"+
+	                              "</data></output>";
+		ResponseBuilder response=Response.status(200).entity(serverReturnText);
+		//Below three lines are necessary when you cross domain rest urls in the application. //For example,, if web app and rest server deployed in two different servers. For more
+		
+		//For more read about CORS HttpRequest
+		response.header("Access-Control-Allow-Origin", "*");
+		response.header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, X-XSRF-TOKEN");
+		response.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");
+		
+		//End of Header
+
+		return response.build();
+	
+	}
 	/**
 	 * Acknowledge GET request
 	 * @param id  not used
