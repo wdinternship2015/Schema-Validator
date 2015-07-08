@@ -5,12 +5,15 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
     restrict: 'A',
     scope: false,
     link: function(scope, element, attrs) {
-       //loads new file everytime element changes 
+       //loads new file everytime element changes
+       //should clear the output text box and file content area on each click 
        var fn = $parse(attrs.onReadFile);
        element.on('change', function(onChangeEvent) {
-           scope.textArea = "";
-           scope.disable= true;
-           scope.inputName = "";
+           scope.$apply(function(){
+             scope.textArea = "";
+             scope.disable= true;
+             scope.inputName = "";
+           });
            var reader = new FileReader();
            reader.onload = function(onLoadEvent) {
            scope.$apply(function(){
@@ -21,7 +24,7 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
        if(onChangeEvent.target.files[0] == null){
            scope.$apply(function(){
              scope.inputFile = null;
-             scope.textArea = "";
+             //scope.textArea = "";
            });
            document.querySelector('#input').style.display="none";
            return;
@@ -34,18 +37,18 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
        //if correct extension, display file contents onto screen 
        //if incorrect, then display error message onto text area and do not display on screen 
        if(fileName.search("txt") >= 0 || fileName.search("xml") >=0){
-          var text = document.querySelector('#comment');
-          text.value = "";
+          //var text = document.querySelector('#comment');
+          //text.value = "";
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.inputFile = onChangeEvent.target.files[0];
-          console.log((onChangeEvent.target).files[0].name);
+          //console.log((onChangeEvent.target).files[0].name);
        } else {
          var text = document.querySelector('#comment');
-         text.value = "Input file needs to be a txt or xml file!";
+         //text.value = "Input file needs to be a txt or xml file!";
          text.style.color="red";
          document.querySelector('#input').style.display="none";
          scope.$apply(function(){
-           console.log("Should be null");
+           //console.log("Should be null");
            scope.inputFile = null;
            scope.textArea = "Input file needs to be a txt or xml file!!";
          });
@@ -66,11 +69,13 @@ angular.module('evaluator').directive('onReadSchema', function ($parse, $window)
        //loads new file everytime element changes 
        var fn = $parse(attrs.onReadSchema);
        element.on('change', function(onChangeEvent) {
-           
+         scope.$apply(function(){  
+           scope.textArea = "";           
            scope.disable= true;
            scope.inputName = "";
-          var text = document.querySelector('#comment');
-          text.value = "";
+         });
+          //var text = document.querySelector('#comment');
+          //text.value = "";
          var reader = new FileReader();
          reader.onload = function(onLoadEvent) {
            scope.$apply(function() {
@@ -93,17 +98,17 @@ angular.module('evaluator').directive('onReadSchema', function ($parse, $window)
          //if correct extension, display file contents onto screen 
          //if incorrect, then display error message onto text area and do not display on screen 
          if(fileName.search("xsd") >= 0){
-          var text = document.querySelector('#comment');
-          text.value = "";
+          //var text = document.querySelector('#comment');
+          //text.value = "";
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.schemaFile = onChangeEvent.target.files[0];
          } else {
           document.querySelector('#schema').style.display="none";
           var text = document.querySelector('#comment');
-          text.value = "Schema File needs to be an xsd file!";
+          //text.value = "Schema File needs to be an xsd file!";
           text.style.color="red";
           scope.$apply(function(){
-           console.log("Should be null");
+           //console.log("Should be null");
            scope.schemaFile = null;
            scope.textArea = "Schema File needs to be an xsd file!";
          });

@@ -1,4 +1,4 @@
-angular.module('evaluator').controller('uploadController',["$scope", "$http", function($scope, $http){
+angular.module('evaluator').controller('uploadController',["$scope", "$http","responseService", function($scope, $http, responseService){
   $scope.showInput = function($fileContent){
     $scope.inputContent = $fileContent;
   }
@@ -27,7 +27,27 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http", fu
     formData.append("schemaFile", $scope.schemaFile);
     formData.append("inputFile", $scope.inputFile);
     formData.append("direction", $scope.direction);
-    $http({
+    responseService.getContent(formData).then(
+      function(success){
+        $scope.textArea = success.data;
+        var text = document.querySelector('#comment');
+        text.value = success.data;
+        text.style.color="black";
+        $scope.disable = false;
+        var saveAsName = getSaveAsResultName($scope.inputFileName, $scope.direction);
+        $scope.inputName = saveAsName;
+        
+      }, 
+      function(error){
+        $scope.textArea = error.data;
+        var text = document.querySelector('#comment');
+        text.value = error.data;
+        text.style.color="red";
+        $scope.disable = false;
+        $scope.inputName = getSaveAsErrorName($scope.inputFileName, $scope.direction);
+    });
+
+    /*$http({
        url: "http://localhost:8080/ValidateService/webapi/runSchema",
 //       url: "http://localhost:8080/ValidateService/webapi/testResponse/POSTxml",
        data: formData,
@@ -55,7 +75,7 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http", fu
         text.style.color="red";
         $scope.disable = false;
         $scope.inputName = getSaveAsErrorName($scope.inputFileName, $scope.direction);
-     });
+     });*/
    }
 }]);
 
