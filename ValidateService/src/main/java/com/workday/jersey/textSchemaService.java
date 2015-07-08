@@ -77,6 +77,8 @@ public class textSchemaService {
 					statusInt = CLIENT_FAIL;
 					outputString = "Invalid direction";
 				}
+				inputIs.close();
+				schemaIs.close();
 			} catch (Exception ex){
 				statusInt = SERVER_ERROR;
 				outputString = ex.getMessage();
@@ -93,7 +95,6 @@ public class textSchemaService {
 		response.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
 		
 		//End of Header
-			    	
 	    return response.build();
 	}
 	
