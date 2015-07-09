@@ -20,35 +20,30 @@ angular.module('evaluator').directive('onReadFile', function ($parse, $window) {
            fn( scope,{$fileContent: onLoadEvent.target.result});
            });
        };
+       
        //if no file selected disable button for download and clear text and file content area
        if(onChangeEvent.target.files[0] == null){
-           scope.$apply(function(){
-             scope.inputFile = null;
-             //scope.textArea = "";
-           });
            document.querySelector('#input').style.display="none";
+           scope.inputFile = null;
            return;
        }
-       document.querySelector('#input').style.display="block";
+       
        scope.displayInput = false;
        var fileName = onChangeEvent.target.files[0].name;
        scope.inputFileName = fileName;
+
        //check extension of the input file. 
        //if correct extension, display file contents onto screen 
        //if incorrect, then display error message onto text area and do not display on screen 
        if(fileName.search("txt") >= 0 || fileName.search("xml") >=0){
-          //var text = document.querySelector('#comment');
-          //text.value = "";
+          document.querySelector('#input').style.display="block";
           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
           scope.inputFile = onChangeEvent.target.files[0];
-          //console.log((onChangeEvent.target).files[0].name);
        } else {
-         var text = document.querySelector('#comment');
-         //text.value = "Input file needs to be a txt or xml file!";
-         text.style.color="red";
          document.querySelector('#input').style.display="none";
+         var text = document.querySelector('#comment');
+         text.style.color="red";
          scope.$apply(function(){
-           //console.log("Should be null");
            scope.inputFile = null;
            scope.textArea = "Input file needs to be a txt or xml file!!";
          });
@@ -66,7 +61,8 @@ angular.module('evaluator').directive('onReadSchema', function ($parse, $window)
     restrict: 'A',
     scope: false,
     link: function(scope, element, attrs) {
-       //loads new file everytime element changes 
+
+    	//loads new file everytime element changes 
        var fn = $parse(attrs.onReadSchema);
        element.on('change', function(onChangeEvent) {
          scope.$apply(function(){  
@@ -74,43 +70,37 @@ angular.module('evaluator').directive('onReadSchema', function ($parse, $window)
            scope.disable= true;
            scope.inputName = "";
          });
-          //var text = document.querySelector('#comment');
-          //text.value = "";
          var reader = new FileReader();
          reader.onload = function(onLoadEvent) {
            scope.$apply(function() {
            fn(scope, {$fileContents:onLoadEvent.target.result});
            });
          };
+         
          //if no file selected disable button for download and clear text and file content area
          if(onChangeEvent.target.files[0] == null){
-             scope.$apply(function(){
-               scope.schemaFile = null;
-               scope.textArea = "";
-             });
              document.querySelector('#schema').style.display="none";
+        	 scope.schemaFile = null;
              return;
            }
-         document.querySelector('#schema').style.display="block";
+         
          var fileName = onChangeEvent.target.files[0].name;
          scope.schemaName = fileName;
+         
          //check extension of the input file. 
          //if correct extension, display file contents onto screen 
          //if incorrect, then display error message onto text area and do not display on screen 
          if(fileName.search("xsd") >= 0){
-          //var text = document.querySelector('#comment');
-          //text.value = "";
-          reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
-          scope.schemaFile = onChangeEvent.target.files[0];
+           document.querySelector('#schema').style.display="block";
+           reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+           scope.schemaFile = onChangeEvent.target.files[0];
          } else {
-          document.querySelector('#schema').style.display="none";
-          var text = document.querySelector('#comment');
-          //text.value = "Schema File needs to be an xsd file!";
-          text.style.color="red";
-          scope.$apply(function(){
-           //console.log("Should be null");
-           scope.schemaFile = null;
-           scope.textArea = "Schema File needs to be an xsd file!";
+           document.querySelector('#schema').style.display="none";
+           var text = document.querySelector('#comment');
+           text.style.color="red";
+           scope.$apply(function(){
+             scope.schemaFile = null;
+             scope.textArea = "Schema File needs to be an xsd file!";
          });
          element.val(null);
          }

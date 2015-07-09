@@ -1,4 +1,5 @@
 angular.module('evaluator').controller('uploadController',["$scope", "$http","responseService", function($scope, $http, responseService){
+  
   $scope.showInput = function($fileContent){
     $scope.inputContent = $fileContent;
   }
@@ -15,6 +16,7 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
   $scope.schemaName="";
   $scope.displayInput=true;
   $scope.enter_name="";
+  
   //sends the multipart form to the server, and receives the text data and displays text area 
   $scope.submit = function() {
     //if no input or schema file, do not send to server and clear text area 
@@ -46,36 +48,6 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
         $scope.disable = false;
         $scope.inputName = getSaveAsErrorName($scope.inputFileName, $scope.direction);
     });
-
-    /*$http({
-       url: "http://localhost:8080/ValidateService/webapi/runSchema",
-//       url: "http://localhost:8080/ValidateService/webapi/testResponse/POSTxml",
-       data: formData,
-       method: 'POST',
-       transformResponse: function(data){
-    	   return data;
-       },
-       headers : {'Content-Type' : undefined},
-     }).success(function (data, status, headers, config) {
-        //display the text response with the correct style   
-        //enable button so user can save response in file and choose a file name 
-        $scope.textArea = data;
-        var text = document.querySelector('#comment');
-        text.value = data;
-        text.style.color="black";
-        $scope.disable = false;
-        var saveAsName = getSaveAsResultName($scope.inputFileName, $scope.direction);
-        $scope.inputName = saveAsName;
-     }).error(function (data, status, headers, config) {
-       //display the text error response with the correct style
-        //disable button so user cannot save error response
-        $scope.textArea = data;
-        var text = document.querySelector('#comment');
-        text.value = data;
-        text.style.color="red";
-        $scope.disable = false;
-        $scope.inputName = getSaveAsErrorName($scope.inputFileName, $scope.direction);
-     });*/
    }
 }]);
 
