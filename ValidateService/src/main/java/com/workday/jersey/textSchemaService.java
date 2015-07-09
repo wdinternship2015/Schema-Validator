@@ -107,9 +107,9 @@ public class textSchemaService {
 	 */
 	private boolean isDirectionValid(String inputFileName, String direction) {
 		if (direction.equalsIgnoreCase(TEXT_TO_XML)){
-			return inputFileName.contains(".txt");
+			return inputFileName.endsWith(".txt");
 		} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
-			return inputFileName.contains(".xml");
+			return inputFileName.endsWith(".xml");
 		}
 		return false;
 	}
