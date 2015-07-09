@@ -9,7 +9,6 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
   $scope.inputFile;
   $scope.schemaFile;
   $scope.inputName ="";
-  $scope.direction="TXT to XML";
   $scope.textArea="";
   $scope.disable = true;
   $scope.inputFileName="";
@@ -28,7 +27,6 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
     var formData = new FormData();
     formData.append("schemaFile", $scope.schemaFile);
     formData.append("inputFile", $scope.inputFile);
-    formData.append("direction", $scope.direction);
     responseService.getContent(formData).then(
       function(success){
         $scope.textArea = success.data;
@@ -52,28 +50,30 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
 }]);
 
 
-function getSaveAsResultName(inputFileName, direction) {
+function getSaveAsResultName(inputFileName) {
 	var i = inputFileName.indexOf(".") - 1;
 	var name = inputFileName.substring(0, i);
-	if (direction.toUpperCase() === "TXT TO XML")  {		
+	if (endsWith(inputFileName, ".txt"))  {		
 		return  name + "_TextToXML.xml";
-	} else if (direction.toUpperCase() === "XML TO TXT") {
+	} else if (endsWith(inputFileName, ".xml")) {
 		return name + "_XMLToText.txt";
 	} else {
 		return result;
 	}
 }
 
-function getSaveAsErrorName(inputFileName, direction) {
+function getSaveAsErrorName(inputFileName) {
 	var i = inputFileName.indexOf(".") - 1;
 	var name = inputFileName.substring(0, i);
-	if (direction.toUpperCase() === "TXT TO XML")  {
+	if (endsWith(inputFileName, ".txt"))  {
 		return name + "_TextToXML_error.txt";
-	} else if (direction.toUpperCase() === "XML TO TXT") {
+	} else if (endsWith(inputFileName, ".xml")) {
 		return name + "_XMLToText_error.txt";
 	} else {
 		return "error.txt";
 	}
 }
 
-
+function endsWith(str, suffix) {
+    return str.toUpperCase().indexOf(suffix.toUpperCase(), str.length - suffix.length) !== -1;
+}

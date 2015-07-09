@@ -49,17 +49,6 @@ describe('text schema validator', function() {
     
   });
   
-  describe('select transformation direction', function() {
 
-	    beforeEach(function() {
-	      browser.get('index.html');
-	      element(by.id('modalOK')).click();
-	    });
-
-	    it('should always have value', function() {   	
-	    	expect(element(by.id('direction')).getAttribute('value')).not.toEqual('');    
-	    });	    
-  });
- 
 });
 
