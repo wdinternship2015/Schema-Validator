@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
  * @author Elisa Yan
  * @author Britney Wong
  * 
- * @since 7.10.2015
+ * @since 7.28.2015
  */
 @Path("/login")
 public class authorizationService {
@@ -40,7 +40,6 @@ public class authorizationService {
 	@Consumes(MediaType.APPLICATION_JSON)    
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response authLogin(Credential credential) {
-//	public Response authLogin(String id) {
 		System.out.println("received request");
 		System.out.println(credential.toString());
 		int statusInt;
@@ -48,16 +47,15 @@ public class authorizationService {
 		ResponseBuilder response;
 	
 		
-		if (credential.getUsername().length()>2 && credential.getPassword().length() > 2) {
+		if (credential.getUsername().equalsIgnoreCase("admin") && credential.getPassword().equalsIgnoreCase("password")) {
 			statusInt = SUCCESS;
-			outputString = "pass";
+			outputString = "ImAToken";
 		} else {
 			statusInt = CLIENT_FAIL;
-			outputString = "denied";
+			outputString = "http://localhost:8000/app/login.html";
 		}
 		System.out.println("success: " + statusInt + "\noutputString: " + outputString);
 		response = Response.status(statusInt).entity(outputString);
-//		response = Response.status(SUCCESS).entity("somethign");
 		
 		//CORS HttpResponse header
 		response.header("Access-Control-Allow-Origin", "*");
