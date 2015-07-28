@@ -1,5 +1,21 @@
-angular.module('evaluator').controller('uploadController',["$scope", "$http","responseService", function($scope, $http, responseService){
-  
+angular.module('evaluator').controller('uploadController',["$scope", "$http", "$window","$localStorage","responseService", function($scope, $http, $window,$localStorage, responseService){
+
+
+  $scope.token = $scope.$storage.token; 
+  console.log("Main Ctrl Local Storage: " + $localStorage.token);
+  if($scope.token.length >0 ){
+    //alert($localStorage.token);
+    $window.location.href = "http://localhost:8000/app/index.html";
+  } else {
+    //alert($localStorage.token);
+    $window.location.href = "http://localhost:8000/app/login.html";
+  } 
+
+  //handle log out
+  $scope.logout = function(){
+    $localStorage.$reset();
+  }
+
   $scope.showInput = function($fileContent){
     $scope.inputContent = $fileContent;
   }
@@ -9,13 +25,14 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
   $scope.inputFile;
   $scope.schemaFile;
   $scope.inputName ="";
+  $scope.direction="TXT to XML";
   $scope.textArea="";
   $scope.disable = true;
   $scope.inputFileName="";
   $scope.schemaName="";
   $scope.displayInput=true;
   $scope.enter_name="";
-  
+  //$window.location.href="http://localhost:8000/app/login.html";
   //sends the multipart form to the server, and receives the text data and displays text area 
   $scope.submit = function() {
     //if no input or schema file, do not send to server and clear text area 
@@ -27,6 +44,7 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
     var formData = new FormData();
     formData.append("schemaFile", $scope.schemaFile);
     formData.append("inputFile", $scope.inputFile);
+    formData.append("direction", $scope.direction);
     responseService.getContent(formData).then(
       function(success){
         $scope.textArea = success.data;
@@ -50,30 +68,28 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
 }]);
 
 
-function getSaveAsResultName(inputFileName) {
+function getSaveAsResultName(inputFileName, direction) {
 	var i = inputFileName.indexOf(".") - 1;
 	var name = inputFileName.substring(0, i);
-	if (endsWith(inputFileName, ".txt"))  {		
+	if (direction.toUpperCase() === "TXT TO XML")  {		
 		return  name + "_TextToXML.xml";
-	} else if (endsWith(inputFileName, ".xml")) {
+	} else if (direction.toUpperCase() === "XML TO TXT") {
 		return name + "_XMLToText.txt";
 	} else {
 		return result;
 	}
 }
 
-function getSaveAsErrorName(inputFileName) {
+function getSaveAsErrorName(inputFileName, direction) {
 	var i = inputFileName.indexOf(".") - 1;
 	var name = inputFileName.substring(0, i);
-	if (endsWith(inputFileName, ".txt"))  {
+	if (direction.toUpperCase() === "TXT TO XML")  {
 		return name + "_TextToXML_error.txt";
-	} else if (endsWith(inputFileName, ".xml")) {
+	} else if (direction.toUpperCase() === "XML TO TXT") {
 		return name + "_XMLToText_error.txt";
 	} else {
 		return "error.txt";
 	}
 }
 
-function endsWith(str, suffix) {
-    return str.toUpperCase().indexOf(suffix.toUpperCase(), str.length - suffix.length) !== -1;
-}
+

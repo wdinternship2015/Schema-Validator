@@ -6,13 +6,18 @@
   </head>
   <script type="text/javascript" src="js/angular.min.js"></script>
   <script type="text/javascript" src="js/angular-resource.js"></script> 
+  <script type="text/javascript" src="js/angular-ui-router.js"></script>
+  <script type="text/javascript" src="js/angular-route.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript" src="js/mainCtrl.js"></script>
   <script type="text/javascript" src="js/modalCtrl.js"></script>
+  <script type="text/javascript" src="js/loginCtrl.js"></script> 
   <script type="text/javascript" src="js/directives.js"></script>
   <script type="text/javascript" src="js/services.js"></script> 
   <script type="text/javascript" src="js/ui-bootstrap-tpls-0.13.0.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-mocks/angular-mocks.js"></script>
+  <script type="text/javascript" src="bower_components/ngStorage/ngStorage.js"></script>
+
 
 <div id="topBanner" style="background-color:#4FA5C9; padding-left: 5em" ng-init="onLoad()" ng-controller="ModalCtrl">
 
@@ -35,6 +40,7 @@
         </div>
     </script>
     <button class="btn-xs btn-danger pull-right" ng-click="open()" title="Usage Instructions">Help!</button>
+    <button class-"btn-xs btn-danger pull-right" ng-click="logout()">Logout</button>
 </div>
 
 <div id="formBody" class="container-fluid" ng-app="evaluator" ng-controller="uploadController" style="background-color:#fafafa">
@@ -65,7 +71,12 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-12 result" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
-				<div class="btn-group text-center" style="margin: 10px" dropdown>
+				<div class "btn-group" style="margin: 10px" dropdown>
+					<select ng-model="direction" id="direction" name="direction" title="Transformation direction" required>
+						<option ng-selected="true" value="TXT To XML">TXT to XML</option>
+			<!-- 			<option value="CSV To XML">CSV to XML</option>   -->
+						<option value="XML To TXT">XML to TXT</option>
+					</select>
 					<button type="submit" class="btn btn-warning" id="submitForm" ng-click="submit()" title="Run input file again schema">Run Schema</button>
 				</div>
 				<div class="form-group">
