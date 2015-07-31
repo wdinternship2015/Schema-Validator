@@ -55,3 +55,34 @@ protractor protractor.conf.js
 
 
 ### ValidatorRESTService
+Running the backend requires source code and Tomcat.
+
+#### Building the project
+We used Apache Maven for building the project and produing .war file.  Please see link below for more information on Maven.
+https://maven.apache.org
+
+#### Web Server
+We used Apache Tomcat for hosting the RESTful server.  Please see link below for installation and launch instructions.
+http://tomcat.apache.org
+
+######## Directory Layout
+
+```
+pom.xml             --> project object model, required for Maven build
+src.main.java/      --> project java source files
+  com.workday.jersey/ --> Jersey source files
+    authorizationService.java   --> REST api for authentication through Active Directory
+    textSchemaService.java      --> REST api for test schema validation services 
+    TransformationProcess.java  --> Text/XML transformation provider
+    TextSchemaUtil.hava         --> adaptors for TextSchemaProcessor methods
+    Credential.java             --> data structure for user login credentials
+    PrettyPrintXML.java         --> XML formatter
+    testResponse.java           --> REST api for testing CORS connections with AngularJS frontend
+  resources/          --> Jersey default folder
+  webapp/             --> Jersey default folder for webapp files
+    index.jsp           --> default web page
+    WEB-INF/            --> webapp configuration files
+      web.xml             --> deployment descriptor required by Tomcat
+target/             --> houses the output from the build
+```
+
