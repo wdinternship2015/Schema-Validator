@@ -50,6 +50,7 @@ angular.module('evaluator').controller('uploadController',["$scope", "$http","re
 }]);
 
 
+//helper function used in submit function to get suggested output file name
 function getSaveAsResultName(inputFileName) {
 	var i = inputFileName.indexOf(".") - 1;
 	var name = inputFileName.substring(0, i);
@@ -62,6 +63,7 @@ function getSaveAsResultName(inputFileName) {
 	}
 }
 
+//helper function used in submit function to get suggested error file name
 function getSaveAsErrorName(inputFileName) {
 	var i = inputFileName.indexOf(".") - 1;
 	var name = inputFileName.substring(0, i);
