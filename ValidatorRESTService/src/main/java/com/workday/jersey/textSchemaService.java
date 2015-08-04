@@ -94,26 +94,5 @@ public class textSchemaService {
 		//End of Header
 	    return response.build();
 	}
-<<<<<<< Updated upstream
 
 }
-=======
-	
-	
-	/**
-	 * Private helper method checking compatibility of transformation direction and input type
-	 * @param inputFileName extension is used for comparison with direction
-	 * @param direction used for validating the input type
-	 * @return true if input file extension is consistent with transformation direction, false otherwise
-	 */
-	private boolean isDirectionValid(String inputFileName, String direction) {
-		if (direction.equalsIgnoreCase(TEXT_TO_XML)){
-			return inputFileName.endsWith(".txt");
-		} else if (direction.equalsIgnoreCase(XML_TO_TEXT)) {
-			return inputFileName.endsWith(".xml");
-		}
-		return false;
-	}
-	
-}
->>>>>>> Stashed changes
