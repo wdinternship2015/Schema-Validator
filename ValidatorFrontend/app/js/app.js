@@ -1,1 +1,1 @@
-var app = angular.module('evaluator', ['ui.bootstrap']); 
+var app = angular.module('evaluator', ['ui.bootstrap', 'ngStorage']); 

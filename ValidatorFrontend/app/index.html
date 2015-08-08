@@ -2,22 +2,31 @@
 <html ng-app="evaluator" style="background-color:#4FA5C9; padding-left: 1em; padding-right: 1em; padding-bottom: 1em;">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/> 
   <link rel="stylesheet" type="text/css" href="css/example.css"/>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
   <head>
   </head>
-  
-   <script type="text/javascript" src="resourceJS/angular.min.js"></script>
+  <script type="text/javascript" src="resourceJS/angular.min.js"></script>
   <script type="text/javascript" src="resourceJS/angular-resource.js"></script> 
   <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/validatorCtrl.js"></script>
   <script type="text/javascript" src="js/mainCtrl.js"></script>
   <script type="text/javascript" src="js/modalCtrl.js"></script>
   <script type="text/javascript" src="js/directives.js"></script>
+  <script type="text/javascript" src="js/loginCtrl.js"></script>
   <script type="text/javascript" src="services/services.js"></script> 
   <script type="text/javascript" src="resourceJS/ui-bootstrap-tpls-0.13.0.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-mocks/angular-mocks.js"></script>
+  <script type="text/javascript" src="bower_components/ngStorage/ngStorage.js"></script> 
 
-  <script type="text/javascript" src="js/loginCtrl.js"></script> 
-  <script type="text/javascript" src="bower_components/ngstorage/ngStorage.js"></script>
-  
+<body>
+  <div  ng-controller="mainCtrl" >
+    <div ng-model="parentToken.token"></div> 
+    <div  ng-include src="pageContent"> </div>
+  </div>
+</body>
+
+
+<!--
 <div id="topBanner" style="background-color:#4FA5C9; padding-left: 5em" ng-init="onLoad()" ng-controller="ModalCtrl">
 
 	<object type="image/svg+xml" data="images/workdayLogo.svg"></object>
@@ -39,10 +48,47 @@
         </div>
     </script>
     <button class="btn-xs btn-danger pull-right" ng-click="open()" title="Usage Instructions">Help!</button>
-    
 </div>
 
-<div ng-include="contentUrl" ng-controller="uploadController">
+<div id="formBody" class="container-fluid" ng-app="evaluator" ng-controller="uploadController" style="background-color:#fafafa">
 
-</div>
+	<form name="validationForm" method="post" enctype="multipart/form-data">
+		<div class="row con">
+			<div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
+				<h4>Input File</h4>
+				<input type="file" on-read-file="showInput($fileContent)"
+					id="inputFile" name="inputFile" title="Text or XML input file" required></input>
+				<div class="ifile" id="input" style="display: none">
+					<pre style="background-color:#ffffff">{{inputContent}} </pre> 
+				</div>
+			</div>
+			<div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
+				<h4>Schema File</h4>
+				<input type="file" id="schemaFile"
+					on-read-schema="showSchema($fileContents)" name="schemaFile" title="Schema XSD file" required></input>
+				<div class="sfile" id="schema" style="display: none">
+					<pre style="background-color:#ffffff"> {{schemaContent}} </pre>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 result" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
+				<div class="btn-group text-center" style="margin: 10px" dropdown>
+					<button type="submit" class="btn btn-warning" id="submitForm" ng-click="submit()" title="Run input file again schema">Run Schema</button>
+				</div>
+				<div class="form-group">
+					<label for="output">Output: </label>
+					<textarea class="form-control" rows="12" id="comment"
+						style="overflow-y: scroll; background-color:#ffffff" ng-model="textArea" readonly></textarea>
+					<div class="pull-right">
+						<input id="enter_name" ng-model="inputName" ng-disabled="disable"
+							maxLength="50" size="50" title="Result file name"></input>
+						<button type="button" class="btn btn-warning" style="margin: 10px"
+							id="add_link" ng-disabled="disable" title="Save result" download-file>Save As</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div> --> 
 </html>

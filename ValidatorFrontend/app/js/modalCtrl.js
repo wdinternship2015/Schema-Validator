@@ -22,6 +22,13 @@ angular.module('evaluator').controller('ModalCtrl', function($scope, $modal, $lo
               controller: 'ModalCtrl'
             });
           };
-
+          
+           //logs out of the application 
+          $scope.logOut = function(){
+             $scope.$parent.parentToken.token = "";
+             //console.log("Validate Ctrl Before: " + $scope.$parent.pageContent); 
+             $scope.$parent.pageContent = "partials/login.html";
+             //console.log("Validate Ctrl After: " + $scope.$parent.pageContent); 
+           }
         });
 
