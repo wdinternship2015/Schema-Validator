@@ -7,6 +7,7 @@
   </head>
   <script type="text/javascript" src="resourceJS/angular.min.js"></script>
   <script type="text/javascript" src="resourceJS/angular-resource.js"></script> 
+  <script type="text/javascript" src="resourceJS/angular-idle.js"></script>
   <script type="text/javascript" src="js/app.js"></script>
   <script type="text/javascript" src="js/validatorCtrl.js"></script>
   <script type="text/javascript" src="js/mainCtrl.js"></script>
@@ -16,10 +17,11 @@
   <script type="text/javascript" src="services/services.js"></script> 
   <script type="text/javascript" src="resourceJS/ui-bootstrap-tpls-0.13.0.min.js"></script>
   <script type="text/javascript" src="bower_components/angular-mocks/angular-mocks.js"></script>
-  <script type="text/javascript" src="bower_components/ngStorage/ngStorage.js"></script> 
+  <script type="text/javascript" src="bower_components/ngstorage/ngStorage.js"></script> 
 
 <body>
   <div  ng-controller="mainCtrl" >
+  	<div ng-include='"partials/idleLogout.html"'></div>
     <div ng-model="parentToken.token"></div> 
     <div  ng-include src="pageContent"> </div>
   </div>

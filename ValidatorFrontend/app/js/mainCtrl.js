@@ -7,6 +7,7 @@ angular.module('evaluator').controller('mainCtrl', function($scope, $localStorag
   //$scope.parentToken.token = $scope.$storage.token; 
   //$scope.parentToken.token = "test";
   //if($scope.parentToken.token == "ImAToken"){
+  
   $scope.$watch('parentToken.token', function(){
 
   if($scope.parentToken.token.length > 0){
@@ -19,4 +20,5 @@ angular.module('evaluator').controller('mainCtrl', function($scope, $localStorag
     $scope.pageContent = "partials/login.html";
   }
  });
+ 
 });
