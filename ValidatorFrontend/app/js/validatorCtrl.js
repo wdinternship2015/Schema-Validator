@@ -47,16 +47,6 @@ angular.module('evaluator').controller('validateCtrl', function($scope, $http, r
         $scope.inputName = getSaveAsErrorName($scope.inputFileName, $scope.direction);
     });
    }
-  
-  //logs out of the application 
-  /*$scope.logOut = function(){
-    $scope.$parent.parentToken.token = "";
-    console.log("Validate Ctrl Before: " + $scope.$parent.pageContent);
-    $scope.$parent.pageContent = "partials/login.html";
-    console.log("Validate Ctrl After: " + $scope.$parent.pageContent); 
-  }*/
-
-
 });
 
 
