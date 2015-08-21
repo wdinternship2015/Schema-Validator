@@ -3,7 +3,6 @@ package com.workday.jersey;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -41,20 +40,20 @@ public class authorizationService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response authLogin(Credential credential) {
 		System.out.println("received request");
-		System.out.println(credential.toString());
 		int statusInt;
 		String outputString;
 		ResponseBuilder response;
 	
+		LDAPauthenticate authenticate = new LDAPauthenticate();
 		
-		if (credential.getUsername().equalsIgnoreCase("admin") && credential.getPassword().equalsIgnoreCase("password")) {
+		try {
+			outputString = authenticate.authenticateUser(credential);
 			statusInt = SUCCESS;
-			outputString = "ImAToken";
-		} else {
+		} catch (Exception ex) {
+			outputString = ex.getMessage();
 			statusInt = CLIENT_FAIL;
-			outputString = "http://localhost:8000/app/login.html";
 		}
-		System.out.println("success: " + statusInt + "\noutputString: " + outputString);
+		
 		response = Response.status(statusInt).entity(outputString);
 		
 		//CORS HttpResponse header

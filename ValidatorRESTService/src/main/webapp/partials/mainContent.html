@@ -1,0 +1,75 @@
+
+<div id="topBanner" style="background-color:#4FA5C9; padding-left: 5em" ng-init="onLoad()" ng-controller="ModalCtrl">
+
+        <object type="image/svg+xml" data="images/workdayLogo.svg"></object>
+        
+         <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Instructions</h3>
+        </div>
+        <div class="modal-body" style="background-color:#fafafa">
+          <h4 style="font-size:12px">1. Click <button style="background-color:#ffffff" disabled>Choose File</button> to select the desired input and schema file </h4>
+          <h4 style="font-size:12px">2. Use <select disabled><option required>TXT to XML</option></select> to select transformation direction  </h4>
+          <h4 style="font-size:12px">3. Click <button class="btn-xs btn-warning" disabled>Run Schema</button> to validate input file against schema file </h4> 
+          <h4 style="font-size:12px">4. Save result to file with <button class="btn-xs btn-warning" disabled>Save As</button>  </h4> 
+                        <br><br>
+          <h8 style="font-size:12px">&nbsp;&nbsp;&nbsp;&nbsp;*Click <button class="btn-xs btn-danger" disabled>Help!</button> to view instructions.  </h8> 
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="modalOK" ng-click="ok()">OK</button>
+        </div>
+    </script>
+    <div class="btn-group pull-right">
+      <button class="btn-xs btn-danger" ng-click="open()" title="Usage Instructions">Help!</button>
+      <button class="btn-xs btn-danger" ng-click="logOut()"> Log Out </button>  
+      
+    </div>
+</div>
+
+<div id="formBody" class="container-fluid" ng-app="evaluator" ng-controller="validateCtrl" style="background-color:#fafafa">
+        <form name="validationForm" method="post" enctype="multipart/form-data">
+                <div class="row con">
+                        <div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
+                                <h4>Input File</h4>
+                                <input type="file" on-read-file="showInput($fileContent)"
+                                        id="inputFile" name="inputFile" title="Text or XML input file" required></input>
+                                <!--<div class="ifile" ng-if="inputContent "> -->
+                                <div class="ifile" id="input" style="display: none">
+                                        <!--<span id="input" ng-if="inputContent"  style="display:block"> {{inputContent}} </span>  -->
+                                        <pre style="background-color:#ffffff">{{inputContent}} </pre> 
+                                <!--    <textarea class="form-control" rows="10"
+                                                style="overflow-y: scroll" ng-model="textArea">{{inputContent}}</textarea> -->
+                                </div>
+                        </div>
+                        <div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
+                                <h4>Schema File</h4>
+                                <input type="file" id="schemaFile"
+                                        on-read-schema="showSchema($fileContents)" name="schemaFile" title="Schema XSD file" required></input>
+                                <!--<div class="sfile" ng-if="schemaContent"> -->
+                                <div class="sfile" id="schema" style="display: none">
+                                        <pre style="background-color:#ffffff"> {{schemaContent}} </pre>
+                                </div>
+                        </div>
+                </div>
+                <div class="row">
+                        <div class="col-sm-12 result" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
+                                <div class="btn-group text-center" style="margin: 10px" dropdown>
+                                        <button type="submit" class="btn btn-warning" id="submitForm" ng-click="submit()" title="Run input file again schema">Run Schema</button>
+                                </div>
+                                <div class="form-group">
+                                        <label for="output">Output: </label>
+                                        <textarea class="form-control" rows="12" id="comment"
+                                                style="overflow-y: scroll; background-color:#ffffff" ng-model="textArea" readonly></textarea>
+                                        <div class="pull-right">
+                                                <input id="enter_name" ng-model="inputName" ng-disabled="disable"
+                                                        maxLength="50" size="50" title="Result file name"></input>
+                                                <button type="button" class="btn btn-warning" style="margin: 10px"
+                                                        id="add_link" ng-disabled="disable" title="Save result" download-file>Save As</button>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </form>
+</div>
+
+
