@@ -8,10 +8,11 @@
             <h3 class="modal-title">Instructions</h3>
         </div>
         <div class="modal-body" style="background-color:#fafafa">
-          <h4 style="font-size:12px">1. Click <button style="background-color:#ffffff" disabled>Choose File</button> to select the desired input and schema file </h4>
-          <h4 style="font-size:12px">2. Use <select disabled><option required>TXT to XML</option></select> to select transformation direction  </h4>
-          <h4 style="font-size:12px">3. Click <button class="btn-xs btn-warning" disabled>Run Schema</button> to validate input file against schema file </h4> 
-          <h4 style="font-size:12px">4. Save result to file with <button class="btn-xs btn-warning" disabled>Save As</button>  </h4> 
+          <h4 style="font-size:12px">1. Click <button style="background-color:#ffffff" disabled>Choose File</button> to select the desired input TEXT file </h4>
+          <h4 style="font-size:12px">2. Select the source of the schema file to be used  </h4>
+		  <h4 style="font-size:12px">3. Choose a schema file </h4>
+          <h4 style="font-size:12px">4. Click <button class="btn-xs btn-warning" disabled>Run Schema</button> to validate input file against schema file </h4> 
+          <h4 style="font-size:12px">5. Save result to file with <button class="btn-xs btn-warning" disabled>Save As</button>  </h4> 
                         <br><br>
           <h8 style="font-size:12px">&nbsp;&nbsp;&nbsp;&nbsp;*Click <button class="btn-xs btn-danger" disabled>Help!</button> to view instructions.  </h8> 
         </div>
@@ -30,7 +31,7 @@
         <form name="validationForm" method="post" enctype="multipart/form-data">
                 <div class="row con">
                         <div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
-                                <h4>Input File</h4>
+                                <p style="font-size: 16px"><strong>Input File</strong></p>
                                 <input type="file" on-read-file="showInput($fileContent)"
                                         id="inputFile" name="inputFile" title="Text or XML input file" required></input>
                                 <!--<div class="ifile" ng-if="inputContent "> -->
@@ -42,13 +43,25 @@
                                 </div>
                         </div>
                         <div class="col-sm-6 scrollit" style="border-style: solid; border-width: 5px; border-color:#4FA5C9">
-                                <h4>Schema File</h4>
-                                <input type="file" id="schemaFile"
-                                        on-read-schema="showSchema($fileContents)" name="schemaFile" title="Schema XSD file" required></input>
-                                <!--<div class="sfile" ng-if="schemaContent"> -->
-                                <div class="sfile" id="schema" style="display: none">
+                                <p style="font-size: 16px"><strong><select style="font-size: 12px" ng-init="schemaSource = schemaSources[0]" ng-model="schemaSource" ng-change="setSchemaSource()" ng-options="option.source for option in schemaSources" ></select>
+                                Schema File</strong></p>
+                                 <div ng-show="schemaSource.source=='SVN'">
+                                 <select ng-model="schemaName" ng-change="getSchemaFile()" ng-options="file.option for file in schemaFiles" ></select>
+                                 <div class="sfile" id="svnSchema" style="display: none">
+                                        <pre style="background-color:#ffffff"> {{svnSchemaContent}} </pre>
+                                </div>
+                                 </div>
+                                 <div ng-show="schemaSource.source=='Local'">
+                                 <input type="file" id="schemaFile"
+                                        on-read-schema="showSchema($fileContents)" name="schemaFile" title="Schema XSD file" ></input>
+                                        <div class="sfile" id="schema" style="display: none">
                                         <pre style="background-color:#ffffff"> {{schemaContent}} </pre>
                                 </div>
+                                </div>
+                                <!--<div class="sfile" ng-if="schemaContent"> 
+                                <div class="sfile" id="schema" style="display: none">
+                                        <pre style="background-color:#ffffff"> {{schemaContent}} </pre>
+                                </div>-->
                         </div>
                 </div>
                 <div class="row">

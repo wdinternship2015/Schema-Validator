@@ -1,7 +1,9 @@
 package com.workday.jersey;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
-
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -11,8 +13,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+
+import com.workday.jersey.validationProcessing.TransformationProcess;
  
 /**
  * Text Schema Service provider for http requests
@@ -32,7 +35,7 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
  * @author Elisa Yan
  * @author Britney Wong
  * 
- * @since 7.1.2015
+ * @since 9.2.2015
  */
 @Path("/runSchema")
 public class textSchemaService {
@@ -53,38 +56,40 @@ public class textSchemaService {
 		String outputString;
 		ResponseBuilder response;
 		
+		String inputFileName = formParams.getField("inputFile").getFormDataContentDisposition().getFileName();		
 		InputStream inputIs = formParams.getField("inputFile").getValueAs(InputStream.class);
-		InputStream schemaIs =formParams.getField("schemaFile").getValueAs(InputStream.class);
-		String inputFileName = formParams.getField("inputFile").getFormDataContentDisposition().getFileName();
-//		String direction = formParams.getField("direction").getValue();
-		
-//		if(isDirectionValid(inputFileName, direction)) {
+		String schemaSource = formParams.getField("schemaSource").getValueAs(String.class);
 
-			try{
-				if (inputIs == null || schemaIs == null) {
-					statusInt = CLIENT_FAIL;
-					outputString = "Can't process input parameters";
-				} else if (inputFileName.endsWith(".txt")) {
-					statusInt = SUCCESS;
-					outputString = TransformationProcess.txtToXML(inputIs, schemaIs);
-				} else if (inputFileName.endsWith(".xml")) {
-					statusInt = SUCCESS;
-					outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
-				} else {
-					statusInt = CLIENT_FAIL;
-					outputString = "Invalid input for transformation.";
-				}
-				inputIs.close();
-				schemaIs.close();
-			} catch (Exception ex){
-				statusInt = SERVER_ERROR;
-				outputString = ex.getMessage();
-			}
-/*		} else {
-			statusInt = CLIENT_FAIL;
-			outputString = "Invalid direction.  \nInput file type does not match transformation direction.";
+		InputStream schemaIs;
+
+		if (schemaSource.toLowerCase().contains("svn")) {
+			String schemaFileName = formParams.getField("schemaFileName").getValueAs(String.class);
+			schemaIs = getInputStream(schemaFileName);
+		} else {
+			schemaIs = formParams.getField("schemaFile").getValueAs(InputStream.class);
 		}
-*/		response = Response.status(statusInt).entity(outputString);
+		
+		try{
+			if (inputIs == null || schemaIs == null) {
+				statusInt = CLIENT_FAIL;
+				outputString = "Can't process input parameters";
+			} else if (inputFileName.endsWith(".txt")) {
+				statusInt = SUCCESS;
+				outputString = TransformationProcess.txtToXML(inputIs, schemaIs);
+			} else if (inputFileName.endsWith(".xml")) {
+				statusInt = SUCCESS;
+				outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
+			} else {
+				statusInt = CLIENT_FAIL;
+				outputString = "Invalid input for transformation.";
+			}
+			inputIs.close();
+
+		} catch (Exception ex){
+			statusInt = SERVER_ERROR;
+			outputString = ex.getMessage();
+		}
+		response = Response.status(statusInt).entity(outputString);
 		
 		//CORS HttpResponse header
 		response.header("Access-Control-Allow-Origin", "*");
@@ -93,6 +98,18 @@ public class textSchemaService {
 		
 		//End of Header
 	    return response.build();
+	}
+	
+	public InputStream getInputStream(String fileName) {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		String schemasFolderPath = classLoader.getResource("scripts/svnFiles").getPath();
+		File schemaFile = new File(schemasFolderPath + fileName);
+	    try {
+			return new FileInputStream(schemaFile);			
+		} catch (FileNotFoundException e) {			
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

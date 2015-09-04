@@ -8,6 +8,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import com.workday.jersey.authentication.Credential;
+import com.workday.jersey.authentication.LDAPauthenticate;
+import com.workday.jersey.initProcess.ServletContextClass;
+
  
 /**
  * Login authorization Service provider for http requests
@@ -47,8 +51,16 @@ public class authorizationService {
 		LDAPauthenticate authenticate = new LDAPauthenticate();
 		
 		try {
-			outputString = authenticate.authenticateUser(credential);
+			authenticate.authenticateUser(credential);
+			if (ServletContextClass.getSchemas() == null) {
+				ServletContextClass init = new ServletContextClass();
+				init.contextInitialized(null);
+				System.out.println("run init");
+			} 
+			
+			outputString = ServletContextClass.getSchemas().toString();			
 			statusInt = SUCCESS;
+			
 		} catch (Exception ex) {
 			outputString = ex.getMessage();
 			statusInt = CLIENT_FAIL;

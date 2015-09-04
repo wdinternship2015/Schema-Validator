@@ -26,7 +26,10 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
-  
+  <listener>
+        <listener-class>com.workday.jersey.initProcess.ServletContextClass</listener-class>
+	</listener>
+
   <servlet-mapping>
     <servlet-name>Jersey Web Application</servlet-name>
     <url-pattern>/webapi/*</url-pattern>
