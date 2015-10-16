@@ -23,7 +23,8 @@ angular.module('evaluator').factory('schemaSVNService', ['$http', function($http
 		    var response = 
 		      $http({
 		        url: "http://localhost:8080/ValidateService/webapi/schemas/getSchema",
-		        params: {fileName: fileName},
+//		        params: {fileName: fileName},
+		        params: fileName,
 		        method: 'GET',
 		        transformResponse: function(data){
 		            return data;

@@ -1,14 +1,11 @@
 package com.workday.jersey.validationProcessing;
 
 import java.io.ByteArrayInputStream;
-
 import java.io.StringWriter;
 
 import javax.management.RuntimeErrorException;
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -17,8 +14,11 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+
 
 /**
  * Class containing public static method to format xml string with appropriate white spaces
@@ -27,12 +27,15 @@ import org.xml.sax.InputSource;
  */
 public class PrettyPrintXML {
 	
+	final static Logger logger = LoggerFactory.getLogger(PrettyPrintXML.class);
+	
 	/**
 	 * Formats input xml string by inserting white spaces
 	 * @param xml input xml string
 	 * @return formatted xml string
 	 */
 	public static String formatXML(String xml) {
+		logger.debug("pretty print processing xml input");
 		try {
 			Document document = DocumentBuilderFactory
 					.newInstance()
@@ -66,6 +69,7 @@ public class PrettyPrintXML {
 
 			return stringWriter.toString();
 		} catch (Exception e) {
+			logger.error("pretty print xml fail: " + e.getMessage());
 			throw new RuntimeErrorException(new Error("Formatting xml string failed."));
 		}
 	}

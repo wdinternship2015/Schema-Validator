@@ -14,7 +14,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.workday.jersey.initProcess.ServletContextClass;
 import com.workday.jersey.validationProcessing.TransformationProcess;
  
 /**
@@ -39,6 +42,9 @@ import com.workday.jersey.validationProcessing.TransformationProcess;
  */
 @Path("/runSchema")
 public class textSchemaService {
+
+	final Logger logger = LoggerFactory.getLogger(textSchemaService.class);
+	
 	final int SUCCESS = 200;
 	final int CLIENT_FAIL = 400;
 	final int SERVER_ERROR = 500;
@@ -55,39 +61,48 @@ public class textSchemaService {
 		int statusInt;
 		String outputString;
 		ResponseBuilder response;
+
+		logger.info("parsing input multipart form");
 		
 		String inputFileName = formParams.getField("inputFile").getFormDataContentDisposition().getFileName();		
 		InputStream inputIs = formParams.getField("inputFile").getValueAs(InputStream.class);
 		String schemaSource = formParams.getField("schemaSource").getValueAs(String.class);
-
+		logger.debug("schema source: " + schemaSource);
 		InputStream schemaIs;
 
 		if (schemaSource.toLowerCase().contains("svn")) {
 			String schemaFileName = formParams.getField("schemaFileName").getValueAs(String.class);
 			schemaIs = getInputStream(schemaFileName);
+			logger.debug("SVN schema inputstream from " + schemaFileName);
 		} else {
 			schemaIs = formParams.getField("schemaFile").getValueAs(InputStream.class);
+			logger.debug("Schema inputstream from file attachment in multipart form");
 		}
 		
 		try{
 			if (inputIs == null || schemaIs == null) {
 				statusInt = CLIENT_FAIL;
 				outputString = "Can't process input parameters";
+				logger.error("can't read input and schema inputstream");
 			} else if (inputFileName.endsWith(".txt")) {
+				logger.trace("invoking textToXML");
 				statusInt = SUCCESS;
 				outputString = TransformationProcess.txtToXML(inputIs, schemaIs);
 			} else if (inputFileName.endsWith(".xml")) {
+				logger.trace("invoking xmlToText");
 				statusInt = SUCCESS;
 				outputString = TransformationProcess.xmlToText(inputIs, schemaIs);
 			} else {
 				statusInt = CLIENT_FAIL;
 				outputString = "Invalid input for transformation.";
+				logger.error("input fie is not .txt or .xml");
 			}
 			inputIs.close();
 
 		} catch (Exception ex){
 			statusInt = SERVER_ERROR;
 			outputString = ex.getMessage();
+			logger.error("text schema validation fail");
 		}
 		response = Response.status(statusInt).entity(outputString);
 		
@@ -101,12 +116,15 @@ public class textSchemaService {
 	}
 	
 	public InputStream getInputStream(String fileName) {
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		String schemasFolderPath = classLoader.getResource("scripts/svnFiles").getPath();
-		File schemaFile = new File(schemasFolderPath + fileName);
+//		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+//		String schemasFolderPath = classLoader.getResource("scripts/svnFiles").getPath();
+//		File schemaFile = new File(schemasFolderPath + fileName);
+		File schemaFile = new File(ServletContextClass.getScriptsPath() + "svnFiles/" + fileName);
 	    try {
+	    	logger.debug("get " + fileName + " inputstream from svnFiles folder");
 			return new FileInputStream(schemaFile);			
-		} catch (FileNotFoundException e) {			
+		} catch (FileNotFoundException e) {	
+			logger.error(fileName + " not found");
 			e.printStackTrace();
 		}
 		return null;

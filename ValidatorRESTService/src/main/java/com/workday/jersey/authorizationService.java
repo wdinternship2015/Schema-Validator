@@ -8,6 +8,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.workday.jersey.authentication.Credential;
 import com.workday.jersey.authentication.LDAPauthenticate;
 import com.workday.jersey.initProcess.ServletContextClass;
@@ -26,24 +29,27 @@ import com.workday.jersey.initProcess.ServletContextClass;
  * @author Elisa Yan
  * @author Britney Wong
  * 
- * @since 7.28.2015
+ * @since 8.28.2015
  */
 @Path("/login")
 public class authorizationService {
+
+	final Logger logger = LoggerFactory.getLogger(authorizationService.class);
+	
 	final int SUCCESS = 200;
 	final int CLIENT_FAIL = 400;
 	final int SERVER_ERROR = 500;
 		
 	/**
-	 * Processes input and schema processing requests
-	 * @param formParams FormDataMultipart object in the Request body
-	 * @return Response with result as a formatted string
+	 * Processes authentication requests
+	 * @param credential username and password pairing
+	 * @return In successful response, a JSON object containing the names of available schema files from SVN.  If authentication fails, a failure response
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)    
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response authLogin(Credential credential) {
-		System.out.println("received request");
+		
 		int statusInt;
 		String outputString;
 		ResponseBuilder response;
@@ -51,11 +57,16 @@ public class authorizationService {
 		LDAPauthenticate authenticate = new LDAPauthenticate();
 		
 		try {
+			if(credential == null) {
+				logger.error("credential object is null");
+				throw new Exception("Credential is null");
+			} 
 			authenticate.authenticateUser(credential);
+			
 			if (ServletContextClass.getSchemas() == null) {
 				ServletContextClass init = new ServletContextClass();
 				init.contextInitialized(null);
-				System.out.println("run init");
+				logger.trace("run init");
 			} 
 			
 			outputString = ServletContextClass.getSchemas().toString();			
@@ -64,6 +75,7 @@ public class authorizationService {
 		} catch (Exception ex) {
 			outputString = ex.getMessage();
 			statusInt = CLIENT_FAIL;
+			logger.info(outputString);
 		}
 		
 		response = Response.status(statusInt).entity(outputString);
