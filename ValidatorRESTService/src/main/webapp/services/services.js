@@ -5,7 +5,7 @@ angular.module('evaluator').service('responseService', ['$http', function($http)
   this.getContent = function(formData){
     var response = 
       $http({
-        url: "http://localhost:8080/ValidateService/webapi/runSchema",
+        url: "webapi/runSchema",
         data: formData,
         method: 'POST',
         transformResponse: function(data){
@@ -32,7 +32,7 @@ angular.module('evaluator').factory('authService', ['$http', function($http){
 	  service.authenticate = function(username, password){
 	    var response = 
 	      $http({
-	        url: "http://localhost:8080/ValidateService/webapi/login",
+	        url: "webapi/login",
 	        data: JSON.stringify({"username": username, "password": password}),
 	        method: 'POST',
 	        transformResponse: function(data){

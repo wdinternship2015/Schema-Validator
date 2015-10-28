@@ -4,7 +4,7 @@ angular.module('evaluator').factory('schemaSVNService', ['$http', function($http
 	  service.getSchemas = function(){
 	    var response = 
 	      $http({
-	        url: "http://localhost:8080/ValidateService/webapi/schemas/options",
+	        url: "webapi/schemas/options",
 	        method: 'GET',
 	        transformResponse: function(data){
 	            return data;
@@ -22,7 +22,7 @@ angular.module('evaluator').factory('schemaSVNService', ['$http', function($http
 		  console.log("schemaSVNService fileName: " + fileName);
 		    var response = 
 		      $http({
-		        url: "http://localhost:8080/ValidateService/webapi/schemas/getSchema",
+		        url: "webapi/schemas/getSchema",
 //		        params: {fileName: fileName},
 		        params: fileName,
 		        method: 'GET',
