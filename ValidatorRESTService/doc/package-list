@@ -1,0 +1,5 @@
+com.workday.jersey
+com.workday.jersey.authentication
+com.workday.jersey.initProcess
+com.workday.jersey.schemaFilesAccess
+com.workday.jersey.validationProcessing
